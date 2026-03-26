@@ -84,7 +84,7 @@ export default function Navbar() {
 
         {/* DROPDOWN MENU */}
         <div
-          className={`overflow-hidden transition-all duration-500 ease-in-out ${open ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"
+          className={`overflow-hidden transition-all duration-500 ease-in-out ${open ? "max-h-[800px] opacity-100" : "max-h-0 opacity-0"
             }`}
         >
           <div className="border-t border-[#10367D]/10 dark:border-white/10 p-8">
