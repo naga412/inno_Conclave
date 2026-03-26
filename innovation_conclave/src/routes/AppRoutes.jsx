@@ -6,6 +6,7 @@ import AgendaPage from "../pages/AgendaPage";
 import SpeakersPage from "../pages/SpeakersPage";
 import ExhibitorsPage from "../pages/ExhibitorsPage";
 import WorkshopsPage from "../pages/WorkshopsPage";
+import LoginPage from "../pages/LoginPage";
 
 export default function AppRoutes() {
     return (
@@ -47,6 +48,14 @@ export default function AppRoutes() {
                 element={
                     <PublicLayout>
                         <WorkshopsPage />
+                    </PublicLayout>
+                } 
+            />
+            <Route 
+                path="/login" 
+                element={
+                    <PublicLayout>
+                        <LoginPage />
                     </PublicLayout>
                 } 
             />

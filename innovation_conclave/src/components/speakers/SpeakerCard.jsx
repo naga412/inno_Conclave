@@ -1,46 +1,71 @@
 import React from "react";
+import { motion } from "framer-motion";
 
-export default function SpeakerCard({ speaker }) {
-  const { name, role, company, category, image, bio } = speaker;
+export default function SpeakerCard({ speaker, index = 0 }) {
+  const { name, role, company, category, image } = speaker;
 
   return (
-    <div className="group relative bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:border-blue-300 dark:hover:border-blue-500/30 hover:shadow-xl hover:shadow-blue-500/10 dark:hover:shadow-black/50 flex flex-col items-center p-6 text-center">
-      {/* Category Tag */}
-      <div className="absolute top-4 right-4">
-        <span className="inline-block px-3 py-1 rounded-full text-[10px] tracking-wider font-bold uppercase bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-800 transition-colors duration-300">
-          {category}
-        </span>
-      </div>
-
-      {/* Speaker Image */}
-      <div className="w-32 h-32 rounded-full overflow-hidden mb-6 border-4 border-slate-50 dark:border-slate-800 group-hover:border-blue-200 dark:group-hover:border-blue-900 transition-colors duration-300 shadow-sm">
-        <img 
-          src={image} 
-          alt={name} 
-          className="w-full h-full object-cover"
-          onError={(e) => {
-            e.target.src = "https://ui-avatars.com/api/?name=" + encodeURIComponent(name) + "&background=0f172a&color=e2e8f0";
-          }}
+    <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{ duration: 0.5, delay: index * 0.1, ease: "easeOut" }}
+        whileHover={{ y: -10 }}
+        className="group relative w-full aspect-[4/5] md:aspect-[3/4] rounded-[0.5rem] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500"
+    >
+        {/* Full Cover Image */}
+        <img
+            src={image || "https://i.pravatar.cc/300"}
+            alt={name}
+            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+            onError={(e) => {
+              e.target.src = "https://ui-avatars.com/api/?name=" + encodeURIComponent(name) + "&background=0f172a&color=e2e8f0";
+            }}
         />
-      </div>
 
-      {/* Content */}
-      <div className="mb-6 grow">
-        <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-1 transition-colors duration-300">{name}</h3>
-        <p className="text-blue-600 dark:text-blue-400 font-medium text-sm mb-1 transition-colors duration-300">{role}</p>
-        <p className="text-slate-400 dark:text-slate-500 text-xs tracking-wide uppercase mb-4 transition-colors duration-300">{company}</p>
-        <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed line-clamp-3 transition-colors duration-300">
-          {bio}
-        </p>
-      </div>
+        {/* Seamless Top Blur Gradient for Sharp Text */}
+        <div className="absolute top-0 left-0 right-0 h-48 backdrop-blur-2xl bg-black/30 [mask-image:linear-gradient(to_bottom,black_10%,transparent_100%)] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out" />
 
-      {/* View Profile Action */}
-      <button 
-        onClick={() => alert(`Opening profile for ${name}`)}
-        className="w-full py-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400 text-sm font-semibold hover:bg-blue-600 hover:text-white hover:border-blue-500 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20"
-      >
-        View Profile
-      </button>
-    </div>
+        {/* Bottom gradient matching the image vibe */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent group-hover:from-black/95 transition-colors duration-500 pointer-events-none" />
+
+        {/* Category Badge */}
+        <div className="absolute top-4 right-4 z-10">
+          <span className="inline-block px-3 py-1 bg-white/10 dark:bg-black/20 backdrop-blur-md border border-white/20 text-white text-[10px] tracking-wider font-bold uppercase rounded-full shadow-sm">
+            {category}
+          </span>
+        </div>
+
+        {/* Top Text (Name) */}
+        <div className="absolute top-12 w-full text-center px-4 opacity-0 -translate-y-8 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 ease-out delay-[50ms]">
+            <h3 className="text-[1.8rem] font-medium text-white tracking-wide drop-shadow-lg">{name}</h3>
+        </div>
+
+        {/* Bottom Content */}
+        <div className="absolute bottom-6 left-6 right-6 flex items-center justify-between">
+            {/* Left: Little avatar and role info */}
+            <div className="flex items-center gap-3">
+                <div className="w-11 h-11 rounded-full bg-slate-200 overflow-hidden border-2 border-white/20 shrink-0">
+                    <img 
+                      src={image || "https://i.pravatar.cc/300"} 
+                      alt={name} 
+                      className="w-full h-full object-cover" 
+                      onError={(e) => {
+                        e.target.src = "https://ui-avatars.com/api/?name=" + encodeURIComponent(name) + "&background=0f172a&color=e2e8f0";
+                      }}
+                    />
+                </div>
+                <div className="min-w-0">
+                    <p className="text-white font-medium text-sm leading-tight truncate">@{company.toLowerCase().replace(/\s+/g, '')}</p>
+                    <p className="text-white/70 text-xs mt-0.5 truncate">{role}</p>
+                </div>
+            </div>
+
+            {/* Right: Button */}
+            <button className="bg-white text-slate-900 font-semibold px-5 py-2.5 rounded-2xl shadow-lg flex items-center gap-2 hover:bg-slate-100 hover:scale-105 transition-all text-sm shrink-0">
+                <span className="text-lg leading-none mb-0.5">+</span> Connect
+            </button>
+        </div>
+    </motion.div>
   );
 }

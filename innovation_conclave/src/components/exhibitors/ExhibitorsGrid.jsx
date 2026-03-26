@@ -14,7 +14,7 @@ export default function ExhibitorsGrid({ exhibitors }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
       {exhibitors.map((exhibitor, idx) => (
-        <ExhibitorCard key={exhibitor.id || idx} exhibitor={exhibitor} />
+        <ExhibitorCard key={exhibitor.id || idx} index={idx} exhibitor={exhibitor} />
       ))}
     </div>
   );

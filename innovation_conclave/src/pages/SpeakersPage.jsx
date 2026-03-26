@@ -85,10 +85,10 @@ export default function SpeakersPage() {
 
   const filteredSpeakers = MOCK_SPEAKERS.filter((speaker) => {
     // Check search 
-    const matchesSearch = speaker.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          speaker.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          speaker.role.toLowerCase().includes(searchQuery.toLowerCase());
-    
+    const matchesSearch = speaker.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      speaker.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      speaker.role.toLowerCase().includes(searchQuery.toLowerCase());
+
     // Check filter
     const matchesFilter = activeFilter === "All" || speaker.category === activeFilter;
 
@@ -120,19 +120,19 @@ export default function SpeakersPage() {
 
       {/* FILTER & GRID SECTION */}
       <section className="relative z-10 container mx-auto px-6 pb-24 max-w-7xl">
-        <SpeakerFilter 
+        <SpeakerFilter
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
           filters={FILTERS}
           activeFilter={activeFilter}
           onFilterChange={setActiveFilter}
         />
-        
+
         <SpeakersGrid speakers={filteredSpeakers} />
       </section>
 
       {/* CTA SECTION */}
-      <section className="relative z-10 border-t border-slate-100 dark:border-white/5 bg-slate-50 dark:bg-white/5 py-24 transition-colors duration-300 text-center">
+      <section className="relative z-10 border-t border-slate-100 dark:border-white/5 bg-slate-50 dark:bg-slate-950 py-24 transition-colors duration-300 text-center">
         <div className="container mx-auto px-6">
           <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6 transition-colors duration-300">Want to hear them speak?</h2>
           <p className="text-slate-600 dark:text-slate-400 mb-10 max-w-2xl mx-auto transition-colors duration-300">

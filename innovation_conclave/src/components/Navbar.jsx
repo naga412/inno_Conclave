@@ -53,7 +53,7 @@ export default function Navbar() {
   return (
     <div className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? "pt-2" : "pt-4"
       }`}>
-      <div className={`mx-auto w-[90%] lg:w-[80%] rounded-lg transition-all duration-500 ${scrolled ? "bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shadow-xl border border-white/20 dark:border-white/10" : "bg-[#EBEBEB] dark:bg-slate-900 shadow-lg border border-transparent dark:border-white/5"
+      <div className={`mx-auto w-[90%] lg:w-[80%] rounded-lg transition-all duration-500 ${scrolled ? "bg-white/95 dark:bg-slate-950/95 backdrop-blur-md shadow-xl border border-white/20 dark:border-white/30" : " dark:bg-slate-950 shadow-lg border border-transparent dark:border-white/30"
         }`}>
         {/* NAVBAR */}
         <div className="flex justify-between items-center px-6 lg:px-10 py-4">
@@ -105,7 +105,7 @@ export default function Navbar() {
               <div className="space-y-3">
                 <h3 className="text-sm uppercase tracking-wider text-[#10367D]/50 dark:text-slate-500 mb-4">Explore</h3>
                 <MenuItem icon={<MapPin size={18} />} text="Venue" onClick={() => setOpen(false)} />
-                <MenuItem icon={<LogIn size={18} />} text="Sign In" onClick={() => setOpen(false)} />
+                <MenuItem to="/login" icon={<LogIn size={18} />} text="Sign In" onClick={() => setOpen(false)} />
                 <MenuItem icon={<UserPlus size={18} />} text="Register" onClick={() => setOpen(false)} />
               </div>
 

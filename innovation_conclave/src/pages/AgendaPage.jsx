@@ -4,61 +4,106 @@ import FilterTabs from "../components/molecules/FilterTabs";
 import AgendaTimeline from "../components/organisms/AgendaTimeline";
 
 const MOCK_AGENDA = [
+  // Day 1
   {
     time: "09:00 AM - 10:00 AM",
-    title: "Registration & Breakfast",
+    title: "Registration & Welcome",
     speaker: "Event Team",
-    category: "Day 1",
+    category: "Opening",
+    day: "Day 1",
     location: "Main Lobby",
-    description: "Check-in, collect your badges, and grab some breakfast before the event starts.",
+    description: "Check-in, grab your badge, and enjoy complimentary coffee while networking with early arrivals.",
   },
   {
-    time: "10:00 AM - 11:00 AM",
-    title: "AI & Future Innovation",
-    speaker: "Dr. Rahul Sharma",
-    category: "Keynote",
+    time: "10:00 AM - 11:30 AM",
+    title: "Keynote Address",
+    speaker: "Visionary Leaders",
+    category: "Keynotes",
+    day: "Day 1",
+    location: "Main Auditorium",
+    description: "Visionary insights from industry leaders on the future of technology and how AI is shaping the landscape.",
+  },
+  {
+    time: "11:30 AM - 01:30 PM",
+    title: "Innovation Expo",
+    speaker: "Various Teams",
+    category: "Expo",
+    day: "Day 1",
+    location: "Expo Hall",
+    description: "The showcase floor officially opens. Discover over 50+ cutting-edge prototypes from top university teams.",
+  },
+  {
+    time: "02:00 PM - 04:30 PM",
+    title: "Startup Pitch",
+    speaker: "Startups & VCs",
+    category: "Compete",
+    day: "Day 1",
+    location: "Pitch Room",
+    description: "Top 10 early-stage startups pitch for seed funding to a panel of expert angel investors and VCs.",
+  },
+  {
+    time: "04:30 PM - 06:00 PM",
+    title: "Panel: AI & Ethics",
+    speaker: "Ethics Committee",
+    category: "Discussion",
+    day: "Day 1",
     location: "Hall A",
-    description: "An engaging discussion on emerging AI technologies and how they will shape our future.",
+    description: "A deep dive into the ethical implications of autonomous systems and responsible development.",
   },
   {
-    time: "11:30 AM - 01:00 PM",
-    title: "Building Scalable Web Apps",
-    speaker: "Jane Doe",
-    category: "Workshops",
-    location: "Room 101",
-    description: "Hands-on workshop exploring best practices for building robust and scalable web applications.",
+    time: "06:00 PM - 07:00 PM",
+    title: "Awards & Closing",
+    speaker: "Event Team",
+    category: "Closing",
+    day: "Day 1",
+    location: "Main Auditorium",
+    description: "Celebrating the pitch competition winners and wrapping up an incredible day of high-impact innovation.",
   },
-  {
-    time: "02:00 PM - 03:00 PM",
-    title: "Cybersecurity in 2026",
-    speaker: "Alex Mercer",
-    category: "Day 1",
-    location: "Hall B",
-    description: "Understanding the evolving threat landscape and next-generation security strategies.",
-  },
+  // Day 2
   {
     time: "09:30 AM - 10:30 AM",
-    title: "The Future of Quantum Computing",
-    speaker: "Dr. Sylvia Wright",
-    category: "Keynote",
+    title: "Day 2 Kickoff",
+    speaker: "Event Team",
+    category: "Opening",
+    day: "Day 2",
     location: "Main Auditorium",
-    description: "A deep dive into quantum algorithms and their real-world applications.",
+    description: "Recap of Day 1 highlights and an inspiring start to our second day of innovation.",
   },
   {
-    time: "11:00 AM - 12:30 PM",
-    title: "UI/UX Design Masterclass",
-    speaker: "David Lee",
+    time: "10:30 AM - 12:30 PM",
+    title: "Expert Workshops",
+    speaker: "Technical Leads",
     category: "Workshops",
-    location: "Room 205",
-    description: "Learn how to craft beautiful, user-centric interfaces from industry leaders.",
+    day: "Day 2",
+    location: "Various Rooms",
+    description: "Hands-on technical sessions covering advanced architectures and robust scalable systems.",
   },
   {
-    time: "02:00 PM - 03:00 PM",
-    title: "Panel: Startup Ecosystem",
-    speaker: "Various Founders",
-    category: "Day 2",
-    location: "Hall A",
-    description: "A candid conversation with startup founders sharing their journey, challenges, and successes.",
+    time: "01:00 PM - 02:30 PM",
+    title: "Networking Lunch",
+    speaker: "Open Floor",
+    category: "Social",
+    day: "Day 2",
+    location: "Skybridge",
+    description: "Catered lunch at the Skybridge. An excellent opportunity to meet potential co-founders and investors.",
+  },
+  {
+    time: "02:30 PM - 04:30 PM",
+    title: "Future of Web3",
+    speaker: "Blockchain Panel",
+    category: "Panel",
+    day: "Day 2",
+    location: "Hall B",
+    description: "Leading experts debate the long-term impacts of blockchain and decentralization on global infrastructure.",
+  },
+  {
+    time: "05:00 PM - 07:00 PM",
+    title: "Grand Finale Gala",
+    speaker: "Event Host",
+    category: "Closing",
+    day: "Day 2",
+    location: "Main Auditorium",
+    description: "The conclusive celebration. Live entertainment, final remarks, and the announcement of the 2027 location.",
   }
 ];
 
@@ -69,10 +114,10 @@ export default function AgendaPage() {
 
   const filteredAgenda = MOCK_AGENDA.filter((session) => {
     if (activeFilter === "All") return true;
-    if (activeFilter === "Day 1") return session.category.includes("Day 1");
-    if (activeFilter === "Day 2") return session.category.includes("Day 2");
+    if (activeFilter === "Day 1") return session.day === "Day 1";
+    if (activeFilter === "Day 2") return session.day === "Day 2";
     if (activeFilter === "Workshops") return session.category === "Workshops";
-    if (activeFilter === "Keynotes") return session.category === "Keynote";
+    if (activeFilter === "Keynotes") return session.category === "Keynotes";
     return true;
   });
 
@@ -102,17 +147,17 @@ export default function AgendaPage() {
 
       {/* AGENDA SECTION */}
       <section className="relative z-10 container mx-auto px-6 pb-20 max-w-5xl">
-        <FilterTabs 
-          filters={FILTERS} 
-          activeFilter={activeFilter} 
-          onFilterChange={setActiveFilter} 
+        <FilterTabs
+          filters={FILTERS}
+          activeFilter={activeFilter}
+          onFilterChange={setActiveFilter}
         />
-        
+
         <AgendaTimeline sessions={filteredAgenda} />
       </section>
 
       {/* CTA SECTION */}
-      <section className="relative z-10 border-t border-slate-100 dark:border-white/5 bg-slate-50 dark:bg-white/5 py-24 transition-colors duration-300 text-center">
+      <section className="relative z-10 dark:bg-gradient-to-b from-slate-950 to-[#0b1120] bg-slate-50 dark:bg-white/5 py-24 transition-colors duration-300 text-center">
         <div className="container mx-auto px-6">
           <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6 transition-colors duration-300">Don't miss out on these insights</h2>
           <p className="text-slate-600 dark:text-slate-400 mb-10 max-w-2xl mx-auto transition-colors duration-300">

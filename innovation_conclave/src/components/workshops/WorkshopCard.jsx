@@ -1,62 +1,66 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { HiOutlineUser, HiOutlineClock, HiOutlineCalendar, HiOutlineTicket } from 'react-icons/hi';
+import { HiOutlineUser, HiOutlineCalendar, HiArrowRight } from 'react-icons/hi';
 
-const WorkshopCard = ({ workshop }) => {
+const WorkshopCard = ({ workshop, index = 0, className = "" }) => {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      whileHover={{ y: -5 }}
-      transition={{ duration: 0.4 }}
-      className="group relative bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:border-blue-300 dark:hover:border-blue-500/30 shadow-sm hover:shadow-xl hover:shadow-blue-900/5 dark:hover:shadow-black/50"
+      initial={{ opacity: 0, scale: 0.95, filter: "blur(10px)" }}
+      whileInView={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.7, delay: (index % 3) * 0.15, ease: [0.16, 1, 0.3, 1] }}
+      className={`group relative rounded-[2rem] overflow-hidden bg-slate-950 shadow-2xl transition-all duration-700 hover:shadow-[0_0_60px_rgba(59,130,246,0.3)] block w-full h-[400px] border border-white/10 ${className}`}
     >
-      {/* Image Container */}
-      <div className="relative h-48 overflow-hidden">
-        <div className="absolute inset-0 bg-blue-600/5 group-hover:bg-blue-600/0 z-10 transition-colors duration-300"></div>
-        <img 
-          src={workshop.image || "https://images.unsplash.com/photo-1517245385169-d391a92e626e?q=80&w=800&auto=format&fit=crop"} 
-          alt={workshop.title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-        />
-        <div className="absolute top-4 right-4 z-20">
-          <span className="px-3 py-1 rounded-full bg-blue-600/80 backdrop-blur-md text-white text-xs font-semibold border border-white/20">
+      {/* Background Image that comes into focus on hover */}
+      <img
+        src={workshop.image || "https://images.unsplash.com/photo-1517245385169-d391a92e626e?q=80&w=800&auto=format&fit=crop"}
+        alt={workshop.title}
+        className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-80 blur-[8px] group-hover:blur-0 scale-110 group-hover:scale-100 transition-all duration-[1200ms] ease-out"
+      />
+      
+      {/* Gradients to ensure text readability */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-700" />
+      <div className="absolute inset-0 bg-blue-900/40 group-hover:bg-blue-600/10 mix-blend-overlay transition-colors duration-700 pointer-events-none" />
+
+      {/* Content Container */}
+      <div className="relative w-full h-full p-8 flex flex-col justify-between z-10">
+        
+        {/* Top: Category & Availability */}
+        <div className="flex items-start justify-between w-full">
+          <span className="inline-block px-4 py-2 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 text-white text-[10px] sm:text-xs font-bold uppercase tracking-wider shadow-xl">
             {workshop.category}
           </span>
-        </div>
-      </div>
-
-      {/* Content */}
-      <div className="p-6">
-        <h3 className="text-xl font-bold mb-2 text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-          {workshop.title}
-        </h3>
-        
-        <div className="flex items-center gap-2 text-sm mb-4 text-slate-600 dark:text-slate-400">
-          <HiOutlineUser className="text-blue-500 dark:text-blue-400" />
-          <span>{workshop.instructor}</span>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4 mb-6">
-          <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-500">
-            <HiOutlineCalendar className="text-blue-500 dark:text-blue-400" />
-            <span>{workshop.date}</span>
-          </div>
-          <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-500">
-            <HiOutlineClock className="text-blue-500 dark:text-blue-400" />
-            <span>{workshop.time} ({workshop.duration})</span>
+          <div className="flex flex-col items-end">
+             <span className="text-white/90 font-bold text-xs sm:text-sm bg-black/50 backdrop-blur-xl px-4 py-2 rounded-xl border border-white/10 shadow-xl">
+                {workshop.seats} Seats Left
+             </span>
           </div>
         </div>
 
-        <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-white/5">
-          <div className="flex items-center gap-2 text-xs font-medium text-blue-600 dark:text-blue-400">
-            <HiOutlineTicket className="text-lg" />
-            <span>{workshop.seats} Seats Left</span>
+        {/* Bottom: Workshop Details */}
+        <div className="transform translate-y-8 group-hover:translate-y-0 transition-transform duration-700 ease-out">
+          <h3 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-white leading-tight mb-4 tracking-tight group-hover:text-blue-300 transition-colors duration-500 drop-shadow-md">
+            {workshop.title}
+          </h3>
+          
+          {/* Metadata Row */}
+          <div className="flex flex-wrap items-center gap-3 text-white/80 text-xs sm:text-sm font-bold mb-6">
+            <div className="flex items-center gap-1.5 bg-white/5 py-1.5 px-3 rounded-full backdrop-blur-sm border border-white/10">
+              <HiOutlineUser className="w-4 h-4 text-blue-400" />
+              <span>{workshop.instructor}</span>
+            </div>
+            <div className="flex items-center gap-1.5 bg-white/5 py-1.5 px-3 rounded-full backdrop-blur-sm border border-white/10">
+              <HiOutlineCalendar className="w-4 h-4 text-purple-400" />
+              <span>{workshop.date}, {workshop.time}</span>
+            </div>
           </div>
-          <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg transition-all active:scale-95 shadow-lg shadow-blue-900/10">
-            Register Now
-          </button>
+
+          {/* Action Button that fades in */}
+          <div className="opacity-0 group-hover:opacity-100 scale-95 group-hover:scale-100 transition-all duration-700 ease-out delay-100 pointer-events-none group-hover:pointer-events-auto h-0 group-hover:h-auto overflow-hidden group-hover:overflow-visible">
+             <button className="flex items-center justify-center gap-2 w-full py-4 mt-2 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-bold shadow-[0_0_30px_rgba(37,99,235,0.5)] active:scale-95 transition-all text-sm uppercase tracking-wide">
+                Enroll in Workshop <HiArrowRight className="w-4 h-4" />
+             </button>
+          </div>
         </div>
       </div>
     </motion.div>

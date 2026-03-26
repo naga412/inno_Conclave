@@ -4,13 +4,13 @@ import { FaTwitter, FaLinkedin, FaGithub, FaDiscord } from "react-icons/fa";
 
 export default function Footer() {
     return (
-        <div className="w-full bg-slate-50 dark:bg-slate-950 transition-colors duration-500 pb-6 px-2 md:px-6 shrink-0">
-            <footer className="relative bg-white dark:bg-[#0b1120] border border-slate-200 dark:border-slate-800 rounded-b-[1rem] md:rounded-b-[2rem] rounded-t-[2rem] md:rounded-t-[1rem] overflow-hidden w-full flex flex-col justify-between shadow-xl dark:shadow-2xl transition-colors duration-500">
+        <div className="w-full bg-slate-50 dark:bg-slate-950 transition-colors duration-500 pb-6 shrink-0">
+            <footer className="relative bg-white dark:bg-[#0b1120]  rounded-b-[1rem] md:rounded-b-[2rem] overflow-hidden w-full flex flex-col justify-between shadow-xl dark:shadow-2xl transition-colors duration-500">
 
                 {/* Background Ambient Effects */}
-                <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 dark:bg-blue-500/20 blur-[150px] rounded-full pointer-events-none" />
-                <div className="absolute bottom-0 left-0 w-96 h-96 bg-cyan-500/5 dark:bg-cyan-500/10 blur-[150px] rounded-full pointer-events-none" />
-                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.02] dark:opacity-[0.05] pointer-events-none mix-blend-overlay" />
+                {/* <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 dark:bg-blue-500/20 blur-[150px] rounded-full pointer-events-none" /> */}
+                {/* <div className="absolute bottom-0 left-0 w-96 h-96 bg-cyan-500/5 dark:bg-cyan-500/10 blur-[150px] rounded-full pointer-events-none" /> */}
+                {/* <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.02] dark:opacity-[0.05] pointer-events-none mix-blend-overlay" /> */}
 
                 {/* Top Content Grid */}
                 <div className="relative z-20 px-3 py-16 md:px-16 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">

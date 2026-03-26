@@ -8,7 +8,8 @@ const MOCK_EXHIBITORS = [
     name: "TechNova Labs",
     category: "AI & Robotics",
     booth: "A12",
-    logo: null,
+    logo: "https://ui-avatars.com/api/?name=TechNova+Labs&background=0D8ABC&color=fff&rounded=true&bold=true",
+    image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=800&q=80",
     description: "Building intelligent automation solutions for the next generation of industrial manufacturing.",
     website: "https://technova.com"
   },
@@ -17,7 +18,8 @@ const MOCK_EXHIBITORS = [
     name: "GreenEarth Systems",
     category: "Sustainability",
     booth: "C05",
-    logo: null,
+    logo: "https://ui-avatars.com/api/?name=Green+Earth&background=059669&color=fff&rounded=true&bold=true",
+    image: "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?auto=format&fit=crop&w=800&q=80",
     description: "Eco-friendly energy management platforms focusing on reducing carbon footprint for urban cities.",
     website: "https://greenearth.io"
   },
@@ -26,7 +28,8 @@ const MOCK_EXHIBITORS = [
     name: "QuantumBits",
     category: "Technology",
     booth: "B21",
-    logo: null,
+    logo: "https://ui-avatars.com/api/?name=Quantum+Bits&background=7C3AED&color=fff&rounded=true&bold=true",
+    image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80",
     description: "Pioneering the future of quantum cryptography and secure communications for enterprise grade security.",
     website: "https://quantumbits.com"
   },
@@ -35,7 +38,8 @@ const MOCK_EXHIBITORS = [
     name: "BioHealth Innovate",
     category: "Healthcare",
     booth: "D14",
-    logo: null,
+    logo: "https://ui-avatars.com/api/?name=Bio+Health&background=E11D48&color=fff&rounded=true&bold=true",
+    image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80",
     description: "Telemedicine and wearable health tracking devices integrated with real-time patient analytics.",
     website: "https://biohealth.org"
   },
@@ -44,7 +48,8 @@ const MOCK_EXHIBITORS = [
     name: "EduSphere",
     category: "Education",
     booth: "E08",
-    logo: null,
+    logo: "https://ui-avatars.com/api/?name=Edu+Sphere&background=D97706&color=fff&rounded=true&bold=true",
+    image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80",
     description: "Interactive learning environments using AR/VR to revolutionize classroom experiences globally.",
     website: "https://edusphere.edu"
   },
@@ -53,7 +58,8 @@ const MOCK_EXHIBITORS = [
     name: "RoboFoundry",
     category: "AI & Robotics",
     booth: "A15",
-    logo: null,
+    logo: "https://ui-avatars.com/api/?name=Robo+Foundry&background=2563EB&color=fff&rounded=true&bold=true",
+    image: "https://images.unsplash.com/photo-1531746790731-6c087fecd65a?auto=format&fit=crop&w=800&q=80",
     description: "Humanoid robotics for domestic assistance and specialized rescue operations in hazardous environments.",
     website: "https://robofoundry.net"
   },
@@ -62,7 +68,8 @@ const MOCK_EXHIBITORS = [
     name: "SmartCities Inc.",
     category: "Technology",
     booth: "B03",
-    logo: null,
+    logo: "https://ui-avatars.com/api/?name=Smart+Cities&background=4F46E5&color=fff&rounded=true&bold=true",
+    image: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=800&q=80",
     description: "IoT infrastructure for optimized traffic management and waste reduction in developing smart cities.",
     website: "https://smartcities.com"
   },
@@ -71,7 +78,8 @@ const MOCK_EXHIBITORS = [
     name: "PureFlow Tech",
     category: "Sustainability",
     booth: "C12",
-    logo: null,
+    logo: "https://ui-avatars.com/api/?name=Pure+Flow&background=0891B2&color=fff&rounded=true&bold=true",
+    image: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=800&q=80",
     description: "Advanced water filtration systems using nanotechnology to provide clean drinking water to remote areas.",
     website: "https://pureflow.tech"
   }
@@ -84,9 +92,9 @@ export default function ExhibitorsPage() {
   const [activeFilter, setActiveFilter] = useState("All");
 
   const filteredExhibitors = MOCK_EXHIBITORS.filter((exhibitor) => {
-    const matchesSearch = exhibitor.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          exhibitor.description.toLowerCase().includes(searchQuery.toLowerCase());
-    
+    const matchesSearch = exhibitor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      exhibitor.description.toLowerCase().includes(searchQuery.toLowerCase());
+
     // Simple filter logic: if activeFilter is "Startups" or "Sponsors", we don't have mock data for them yet, but we'll show empty or all
     const matchesFilter = activeFilter === "All" || exhibitor.category === activeFilter;
 
@@ -118,14 +126,14 @@ export default function ExhibitorsPage() {
 
       {/* FILTER & GRID SECTION */}
       <section className="relative z-10 container mx-auto px-6 pb-24 max-w-7xl">
-        <ExhibitorFilter 
+        <ExhibitorFilter
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
           filters={FILTERS}
           activeFilter={activeFilter}
           onFilterChange={setActiveFilter}
         />
-        
+
         <ExhibitorsGrid exhibitors={filteredExhibitors} />
       </section>
 
