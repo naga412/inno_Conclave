@@ -53,7 +53,7 @@ export default function Navbar() {
   return (
     <div className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? "pt-2" : "pt-4"
       }`}>
-      <div className={`mx-auto w-[90%] lg:w-[80%] rounded-lg transition-all duration-500 ${scrolled ? "bg-white/95 dark:bg-slate-950/95 backdrop-blur-md shadow-xl border border-white/20 dark:border-white/30" : " dark:bg-slate-950 shadow-lg border border-transparent dark:border-white/30"
+      <div className={`mx-auto w-[90%] lg:w-[80%] rounded-lg transition-all duration-500 ${scrolled ? "bg-white/95 dark:bg-slate-950/95 backdrop-blur-md shadow-xl border border-white/20 dark:border-white/30" : " dark:bg-slate-950 bg-white shadow-lg border border-transparent dark:border-white/30"
         }`}>
         {/* NAVBAR */}
         <div className="flex justify-between items-center px-6 lg:px-10 py-4">

@@ -132,7 +132,7 @@ export default function SpeakersPage() {
       </section>
 
       {/* CTA SECTION */}
-      <section className="relative z-10 border-t border-slate-100 dark:border-white/5 bg-slate-50 dark:bg-slate-950 py-24 transition-colors duration-300 text-center">
+      <section className="relative z-10 bg-gradient-to-b from-white to-slate-200 dark:bg-gradient-to-b from-slate-950 to-[#0b1120] py-24 transition-colors duration-300 text-center">
         <div className="container mx-auto px-6">
           <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6 transition-colors duration-300">Want to hear them speak?</h2>
           <p className="text-slate-600 dark:text-slate-400 mb-10 max-w-2xl mx-auto transition-colors duration-300">

@@ -86,10 +86,10 @@ const WorkshopsPage = () => {
     return mockWorkshops.filter((workshop) => {
       const matchesCategory = activeCategory === "All" || workshop.category === activeCategory;
       const matchesLevel = activeLevel === "All" || workshop.level === activeLevel;
-      const matchesSearch = 
+      const matchesSearch =
         workshop.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         workshop.instructor.toLowerCase().includes(searchQuery.toLowerCase());
-      
+
       return matchesCategory && matchesLevel && matchesSearch;
     });
   }, [activeCategory, activeLevel, searchQuery]);
@@ -107,7 +107,7 @@ const WorkshopsPage = () => {
         </div>
 
         <div className="container mx-auto px-6 relative z-10 text-center">
-            <div className="max-w-4xl mx-auto">
+          <div className="max-w-4xl mx-auto">
             <span className="inline-block px-4 py-1.5 rounded-full bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 text-blue-600 dark:text-blue-400 text-sm font-bold mb-6">
               Hands-On Learning
             </span>
@@ -115,31 +115,31 @@ const WorkshopsPage = () => {
               Innovation <span className="text-blue-600 dark:text-blue-500">Workshops</span>
             </h1>
             <p className="text-xl text-slate-600 dark:text-slate-400 leading-relaxed max-w-2xl mx-auto">
-              Learn directly from industry experts and build real-world skills. 
+              Learn directly from industry experts and build real-world skills.
               Join our interactive sessions to master technologies driving the future.
             </p>
-            </div>
+          </div>
         </div>
       </section>
 
       {/* Filters & Grid Section */}
       <section className="pb-32">
         <div className="container mx-auto px-6">
-          <WorkshopFilter 
-            activeCategory={activeCategory} 
+          <WorkshopFilter
+            activeCategory={activeCategory}
             setActiveCategory={setActiveCategory}
             activeLevel={activeLevel}
             setActiveLevel={setActiveLevel}
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
           />
-          
+
           <WorkshopsGrid workshops={filteredWorkshops} />
         </div>
       </section>
 
       {/* Featured CTA */}
-      <section className="py-20 border-y border-slate-100 dark:border-white/5 bg-slate-50 dark:bg-white/5 relative overflow-hidden text-center transition-colors duration-300">
+      <section className="py-20 bg-gradient-to-b from-white to-slate-200 dark:bg-gradient-to-b from-slate-950 to-[#0b1120] relative overflow-hidden text-center transition-colors duration-300">
         <div className="container mx-auto px-6">
           <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Ready to expand your horizons?</h2>
           <p className="text-slate-600 dark:text-slate-400 mb-10 max-w-xl mx-auto">

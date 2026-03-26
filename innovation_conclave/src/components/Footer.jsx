@@ -4,8 +4,8 @@ import { FaTwitter, FaLinkedin, FaGithub, FaDiscord } from "react-icons/fa";
 
 export default function Footer() {
     return (
-        <div className="w-full bg-slate-50 dark:bg-slate-950 transition-colors duration-500 pb-6 shrink-0">
-            <footer className="relative bg-white dark:bg-[#0b1120]  rounded-b-[1rem] md:rounded-b-[2rem] overflow-hidden w-full flex flex-col justify-between shadow-xl dark:shadow-2xl transition-colors duration-500">
+        <div className="w-full bg-white dark:bg-slate-950 transition-colors duration-500 pb-6 shrink-0">
+            <footer className="relative bg-slate-200 dark:bg-[#0b1120]  rounded-b-[1rem] md:rounded-b-[2rem] overflow-hidden w-full flex flex-col justify-between shadow-xl dark:shadow-2xl transition-colors duration-500">
 
                 {/* Background Ambient Effects */}
                 {/* <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 dark:bg-blue-500/20 blur-[150px] rounded-full pointer-events-none" /> */}
@@ -75,7 +75,7 @@ export default function Footer() {
                 </div>
 
                 {/* Final Absolute Bottom Bar */}
-                <div className="absolute bottom-0 w-full px-8 md:px-16 py-6 md:py-8 flex flex-col md:flex-row items-center justify-between border-t border-slate-200 dark:border-white/10 z-20 bg-white/80 dark:bg-[#0b1120]/80 backdrop-blur-2xl transition-colors duration-500">
+                <div className="absolute bottom-0 w-full px-8 md:px-16 py-6 md:py-8 flex flex-col md:flex-row items-center justify-between border-t border-slate-200 dark:border-white/10 z-20 bg-slate-200 dark:bg-[#0b1120]/80 backdrop-blur-2xl transition-colors duration-500">
                     <span className="text-slate-500 text-sm font-medium transition-colors">&copy; {new Date().getFullYear()} Designed and Developed by Nagalakshmi & Deedepya. All rights reserved.</span>
                     <div className="flex items-center gap-6 text-sm font-medium text-slate-500 mt-4 md:mt-0 transition-colors">
                         <a href="#" className="hover:text-slate-900 dark:hover:text-white transition-colors">Privacy</a>

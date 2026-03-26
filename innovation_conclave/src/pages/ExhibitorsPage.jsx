@@ -138,7 +138,7 @@ export default function ExhibitorsPage() {
       </section>
 
       {/* HIGHLIGHTS SECTION (Optional info block) */}
-      <section className="relative z-10 py-16 bg-slate-50 dark:bg-white/5 border-y border-slate-100 dark:border-white/5 transition-colors duration-300">
+      <section className="relative z-10 py-16 bg-white dark:bg-white/5 border-y border-slate-100 dark:border-white/5 transition-colors duration-300">
 
         <div className="container mx-auto px-6 max-w-5xl">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
@@ -163,7 +163,7 @@ export default function ExhibitorsPage() {
       </section>
 
       {/* CTA SECTION */}
-      <section className="relative z-10 py-24 bg-white dark:bg-slate-950 transition-colors duration-300 text-center">
+      <section className="relative z-10 py-24 bg-gradient-to-b from-white to-slate-200 dark:bg-gradient-to-b dark:from-slate-950 dark:to-[#0b1120] transition-colors duration-300 text-center">
         <div className="container mx-auto px-6">
           <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Become an Exhibitor</h2>
           <p className="text-slate-600 dark:text-slate-400 mb-10 max-w-2xl mx-auto">
