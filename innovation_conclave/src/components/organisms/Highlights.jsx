@@ -112,7 +112,7 @@ export default function Highlights() {
 
                 {/* Right Side: Sticky Visual Content (Hidden on Mobile) */}
                 <div className="hidden md:flex w-1/2 sticky top-0 h-screen items-center justify-center pl-12 lg:pl-24">
-                    <div className="w-full aspect-[9/16] lg:aspect-square relative rounded-[0.5rem] bg-slate-900 overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.12)] border border-slate-200/50 dark:border-white/10 dark:shadow-[0_30px_60px_rgba(0,0,0,0.5)]">
+                    <div className="w-full aspect-[9/16] lg:aspect-square relative rounded-[0.5rem] bg-slate-950 overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.12)] border border-slate-200/50 dark:border-white/10 dark:shadow-[0_30px_60px_rgba(0,0,0,0.5)]">
 
                         {/* Smooth Crossfade Image Background */}
                         <AnimatePresence mode="popLayout">
@@ -129,7 +129,7 @@ export default function Highlights() {
                         </AnimatePresence>
 
                         {/* Dark Gradient Overlay for Contrast */}
-                        <div className="absolute   inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/10 to-transparent pointer-events-none" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/10 to-slate-900/10 pointer-events-none" />
 
                         {/* Floating Icon Animation */}
                         <AnimatePresence mode="popLayout">

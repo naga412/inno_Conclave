@@ -34,7 +34,7 @@ export default function SpeakersPreview() {
                         >
                             Visionaries
                         </motion.span>
-                        <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
+                        <h2 className="text-5xl md:text-7xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
                             Featured <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500">Speakers</span>
                         </h2>
                         <p className="mt-5 text-lg text-slate-600 dark:text-slate-400 max-w-xl">

@@ -53,15 +53,17 @@ export default function Navbar() {
   return (
     <div className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? "pt-2" : "pt-4"
       }`}>
-      <div className={`mx-auto w-[90%] lg:w-[80%] rounded-2xl transition-all duration-500 ${scrolled ? "bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shadow-xl border border-white/20 dark:border-white/10" : "bg-[#EBEBEB] dark:bg-slate-900 shadow-lg border border-transparent dark:border-white/5"
+      <div className={`mx-auto w-[90%] lg:w-[80%] rounded-lg transition-all duration-500 ${scrolled ? "bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shadow-xl border border-white/20 dark:border-white/10" : "bg-[#EBEBEB] dark:bg-slate-900 shadow-lg border border-transparent dark:border-white/5"
         }`}>
         {/* NAVBAR */}
         <div className="flex justify-between items-center px-6 lg:px-10 py-4">
           {/* LOGO */}
-          <div className="group cursor-pointer">
-            <h1 className="text-2xl lg:text-3xl font-bold text-[#10367D] dark:text-white tracking-tight">
-              Innovation Conclave
-            </h1>
+          <div className="group cursor-pointer flex-col justify-center flex items-start">
+            <Link to="/" className="text-md md:text-3xl font-extrabold text-black dark:text-white tracking-tight hover:opacity-80 transition-opacity flex items-center gap-2">
+              {/* <span className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-cyan-500 shadow-lg shadow-blue-500/20 flex items-center justify-center border border-white/20">
+                            </span> */}
+              INNOVATION<span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-400">CONCLAVE</span>
+            </Link>
             <div className="h-0.5 w-0 group-hover:w-full bg-[#10367D] dark:bg-violet-500 transition-all duration-500"></div>
           </div>
 

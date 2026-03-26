@@ -1,11 +1,12 @@
-// templates/PublicLayout.jsx
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 export default function PublicLayout({ children }) {
     return (
-        <div className="min-h-screen">
+        <div className="flex flex-col min-h-screen">
             <Navbar />
-            <main>{children}</main>
+            <main className="flex-grow">{children}</main>
+            <Footer />
         </div>
     );
 }
