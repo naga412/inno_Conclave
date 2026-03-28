@@ -149,7 +149,7 @@ export default function AgendaPreview() {
             </div>
 
             {/* The 3D Parallax Scrolling Deck */}
-            <div ref={containerRef} className="relative w-full mt-10">
+            <div ref={containerRef} className="relative w-full">
                 <AnimatePresence mode="wait">
                     <motion.div
                         key={activeDay}

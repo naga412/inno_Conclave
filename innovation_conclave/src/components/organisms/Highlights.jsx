@@ -82,7 +82,7 @@ export default function Highlights() {
         <section className="bg-slate-50 dark:bg-slate-950 transition-colors duration-500 relative z-10 w-full">
 
             {/* Massive Header Section */}
-            <div className="max-w-7xl mx-auto px-6 md:px-12 pt-24 md:pt-40 pb-10 md:pb-20 text-left md:text-center">
+            <div className="max-w-7xl mx-auto px-6 md:px-12 text-left md:text-center">
                 <motion.h2
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}

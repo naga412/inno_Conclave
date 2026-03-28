@@ -5,7 +5,7 @@ export default function AgendaCard({ session }) {
   const { time, title, speaker, category, location, description } = session;
 
   return (
-    <div className="relative pl-8 sm:pl-32 py-6 group">
+    <div className="relative pl-8 sm:pl-32 group">
       {/* Timeline Dot & Line */}
       <div className="absolute left-0 sm:left-22 top-10 flex flex-col items-center w-8">
         <div className="h-4 w-4 rounded-full bg-blue-600 dark:bg-blue-500 border-4 border-white dark:border-slate-950 z-10 shadow-sm transition-colors duration-300"></div>

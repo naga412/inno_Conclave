@@ -69,7 +69,7 @@ export default function Footer() {
 
                 {/* Massive Edge-to-Edge Typography Footer Logo */}
                 <div className="relative w-full overflow-hidden  flex justify-center items-end md:mt-0 z-0 select-none pointer-events-none pb-48 md:pb-28">
-                    <h1 className="text-[14vw] text-center font-black text-slate-900/[0.03] dark:text-white/[0.04] leading-[0.8] tracking-tighter whitespace-nowrap transition-colors duration-500">
+                    <h1 className="text-[14vw] text-center font-black text-slate-900/20 dark:text-white/[0.04] leading-[0.8] tracking-tighter whitespace-nowrap transition-colors duration-500">
                         INNOVATION <br />CONCLAVE
                     </h1>
                 </div>

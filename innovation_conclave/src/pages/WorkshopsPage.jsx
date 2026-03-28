@@ -139,7 +139,7 @@ const WorkshopsPage = () => {
       </section>
 
       {/* Featured CTA */}
-      <section className="py-20 bg-gradient-to-b from-white to-slate-200 dark:bg-gradient-to-b from-slate-950 to-[#0b1120] relative overflow-hidden text-center transition-colors duration-300">
+      <section className="py-20 bg-gradient-to-b from-white to-slate-200 dark:bg-gradient-to-b dark:from-slate-950 dark:to-[#0b1120] relative overflow-hidden text-center transition-colors duration-300">
         <div className="container mx-auto px-6">
           <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Ready to expand your horizons?</h2>
           <p className="text-slate-600 dark:text-slate-400 mb-10 max-w-xl mx-auto">

@@ -45,7 +45,7 @@ export default function NetworkBackground() {
 
     const initParticles = () => {
       particles = [];
-      const count = Math.min(Math.floor(canvas.width / 15), 150);
+      const count = Math.min(Math.floor(canvas.width / 30), 60);
       for (let i = 0; i < count; i++) particles.push(new Particle());
     };
 
@@ -115,7 +115,7 @@ export default function NetworkBackground() {
         className="absolute inset-0 z-0 opacity-20 dark:opacity-10"
         style={{
           backgroundImage: 'radial-gradient(circle, rgb(59,130,246) 1.5px, transparent 1.5px)',
-          backgroundSize: '48px 48px',
+          backgroundSize: '30px 30px',
         }}
       />
 

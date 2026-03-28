@@ -64,7 +64,7 @@ export default function Navbar() {
                             </span> */}
               INNOVATION<span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-400">CONCLAVE</span>
             </Link>
-            <div className="h-0.5 w-0 group-hover:w-full bg-[#10367D] dark:bg-violet-500 transition-all duration-500"></div>
+            <div className="h-0.5 w-0 group-hover:w-full bg-[#10367D] dark:bg-cyan-500 transition-all duration-500"></div>
           </div>
 
           {/* TOGGLE & HAMBURGER */}
@@ -152,7 +152,7 @@ function MenuItem({ icon, text, to, onClick }) {
       </span>
       <span className="relative text-[#10367D] dark:text-slate-200">
         {text}
-        <span className={`absolute bottom-0 left-0 h-0.5 bg-[#10367D] dark:bg-violet-500 transition-all duration-300 ${hover ? "w-full" : "w-0"
+        <span className={`absolute bottom-0 left-0 h-0.5 bg-[#10367D] dark:bg-cyan-500 transition-all duration-300 ${hover ? "w-full" : "w-0"
           }`}></span>
       </span>
     </>
