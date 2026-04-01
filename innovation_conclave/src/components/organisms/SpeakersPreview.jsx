@@ -10,10 +10,10 @@ const speakers = [
 
 export default function SpeakersPreview() {
     return (
-        <section className="py-24 bg-slate-50 dark:bg-slate-950 transition-colors duration-500 relative overflow-hidden z-10">
+        <section className="py-24  transition-colors duration-500 relative overflow-hidden z-10">
             {/* Subtle Background Pattern / Glow */}
             <div className="absolute top-1/2 left-0 -translate-y-1/2 w-72 h-72 bg-purple-500/10 dark:bg-purple-500/20 blur-[100px] rounded-full pointer-events-none" />
-            <div className="absolute top-1/2 right-0 -translate-y-1/2 w-72 h-72 bg-blue-500/10 dark:bg-blue-500/20 blur-[100px] rounded-full pointer-events-none" />
+            <div className="absolute top-1/2 right-0 -translate-y-1/2 w-72 h-72 bg-orange-300/10 dark:bg-orange-300/20 blur-[100px] rounded-full pointer-events-none" />
 
             <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
                 {/* Section Header */}
@@ -30,7 +30,7 @@ export default function SpeakersPreview() {
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.5, delay: 0.2 }}
-                            className="inline-block py-1.5 px-4 rounded-full bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-slate-300 text-sm font-semibold tracking-wide uppercase mb-6"
+                            className="inline-block py-1.5 px-4 rounded-sm bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-slate-300 text-sm font-semibold tracking-wide uppercase mb-6"
                         >
                             Visionaries
                         </motion.span>
@@ -43,7 +43,7 @@ export default function SpeakersPreview() {
                     </div>
                     <motion.button
                         whileHover={{ x: 5 }}
-                        className="group flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-white px-6 py-3 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-purple-500 dark:hover:border-purple-500 hover:shadow-lg hover:shadow-purple-500/20 transition-all duration-300"
+                        className="group flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-white px-6 py-3 rounded-sm bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-purple-500 dark:hover:border-purple-500 hover:shadow-lg hover:shadow-purple-500/20 transition-all duration-300"
                     >
                         View Full Lineup
                         <HiOutlineArrowRight className="w-5 h-5 text-purple-600 dark:text-purple-400 group-hover:translate-x-1 transition-transform" />
@@ -100,7 +100,7 @@ export default function SpeakersPreview() {
                                 </div>
 
                                 {/* Right: Button */}
-                                <button className="bg-white text-slate-900 font-semibold px-5 py-2.5 rounded-2xl shadow-lg flex items-center gap-2 hover:bg-slate-100 hover:scale-105 transition-all text-sm shrink-0">
+                                <button className="bg-white text-slate-900 font-semibold px-5 py-2.5 rounded-sm shadow-lg flex items-center gap-2 hover:bg-slate-100 hover:scale-105 transition-all text-sm shrink-0">
                                     <span className="text-lg leading-none mb-0.5">+</span> Connect
                                 </button>
                             </div>

@@ -10,7 +10,7 @@ const highlights = [
         tag: "Discover",
         description: "Explore forward-thinking projects and disruptive prototypes from brilliant students and ambitious startups shaping tomorrow's technology.",
         imageUrl: "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&q=80&w=2670",
-        shadow: "shadow-blue-500/30 text-blue-600 dark:text-blue-400",
+        shadow: "shadow-orange-300/30 text-orange-300 dark:text-orange-300",
     },
     {
         id: "talks",
@@ -27,7 +27,7 @@ const highlights = [
         title: "Startup Pitch",
         tag: "Compete",
         description: "Watch brilliant teams compete for seed funding by pitching bold, scalable ideas to experienced angel investors.",
-        imageUrl: "https://images.unsplash.com/photo-1556761175-5973dc0f32b7?auto=format&fit=crop&q=80&w=2532",
+        imageUrl: "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&q=80&w=2670",
         shadow: "shadow-emerald-500/30 text-emerald-600 dark:text-emerald-400",
     }
 ];
@@ -68,7 +68,7 @@ function HighlightTextRow({ item, index, activeIndex, setActiveIndex }) {
             <p className="text-lg md:text-2xl leading-relaxed text-slate-600 dark:text-slate-400 max-w-lg mb-6 md:mb-10">
                 {item.description}
             </p>
-            <button className="flex items-center justify-center md:justify-start gap-2 text-sm md:text-base font-bold px-6 py-3 md:px-8 md:py-4 rounded-[0.5rem] md:rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 transition-all w-full md:w-fit shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95">
+            <button className="flex items-center justify-center md:justify-start gap-2 text-sm md:text-base font-bold px-6 py-3 md:px-8 md:py-4 rounded-[0.5rem] md:rounded-sm bg-slate-900 dark:bg-white text-white dark:text-slate-900 transition-all w-full md:w-fit shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95">
                 Explore The Program <HiArrowRight className="w-5 h-5 ml-1 md:ml-2" />
             </button>
         </div>
@@ -79,7 +79,7 @@ export default function Highlights() {
     const [activeIndex, setActiveIndex] = useState(0);
 
     return (
-        <section className="bg-slate-50 dark:bg-slate-950 transition-colors duration-500 relative z-10 w-full">
+        <section className="bg-transparent relative z-[50] transition-colors duration-500 relative z-10 w-full">
 
             {/* Massive Header Section */}
             <div className="max-w-7xl mx-auto px-6 md:px-12 text-left md:text-center">
@@ -98,7 +98,7 @@ export default function Highlights() {
             <div className="max-w-7xl mx-auto px-6 md:px-12 relative flex flex-col md:flex-row items-start pb-20 md:pb-40">
 
                 {/* Left Side: Scrolling Text Content */}
-                <div className="w-full md:w-1/2 md:py-[20vh] relative z-20 flex flex-col gap-8 md:gap-0">
+                <div className="w-full md:w-1/2  relative z-20 flex flex-col gap-8 md:gap-0">
                     {highlights.map((item, index) => (
                         <HighlightTextRow
                             key={item.id}
@@ -111,8 +111,8 @@ export default function Highlights() {
                 </div>
 
                 {/* Right Side: Sticky Visual Content (Hidden on Mobile) */}
-                <div className="hidden md:flex w-1/2 sticky top-0 h-screen items-center justify-center pl-12 lg:pl-24">
-                    <div className="w-full aspect-[9/16] lg:aspect-square relative rounded-[0.5rem] bg-slate-950 overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.12)] border border-slate-200/50 dark:border-white/10 dark:shadow-[0_30px_60px_rgba(0,0,0,0.5)]">
+                <div className="hidden md:flex w-1/2 sticky top-0 h-screen relative z-[200] items-center justify-center pl-12 lg:pl-24">
+                    <div className="w-full aspect-[9/16] relative z-[200]  lg:aspect-square rounded-[0.5rem] bg-slate-950 overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.12)] border border-slate-200/50 dark:border-white/10 dark:shadow-[0_30px_60px_rgba(0,0,0,0.5)]">
 
                         {/* Smooth Crossfade Image Background */}
                         <AnimatePresence mode="popLayout">
@@ -124,7 +124,7 @@ export default function Highlights() {
                                 animate={{ opacity: 0.6, scale: 1 }}
                                 exit={{ opacity: 0 }}
                                 transition={{ duration: 0.8, ease: "easeInOut" }}
-                                className="absolute inset-0 w-full h-full object-cover"
+                                className="absolute z-[200] inset-0 w-full h-full object-cover"
                             />
                         </AnimatePresence>
 
@@ -142,7 +142,7 @@ export default function Highlights() {
                                 className="absolute margin-top-[-20px] top-0 right-0 inset-0  pointer-events-none"
                             >
                                 {/* Premium Glass Morphism Icon Box */}
-                                <div className="w-48 h-48 lg:w-32 lg:h-32 rounded-br-[3rem] backdrop-blur-sm border border-white/20 flex items-center justify-center shadow-[0_20px_40px_rgba(0,0,0,0.1)] z-10">
+                                <div className="w-48 h-48 lg:w-32 lg:h-32 rounded-br-[1rem] backdrop-blur-sm border border-white/20 flex items-center justify-center shadow-[0_20px_40px_rgba(0,0,0,0.1)] z-10">
                                     {highlights[activeIndex].icon}
                                 </div>
                             </motion.div>

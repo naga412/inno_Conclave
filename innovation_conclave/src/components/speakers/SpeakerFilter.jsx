@@ -1,12 +1,12 @@
 import React from "react";
 import { Search } from "lucide-react";
 
-export default function SpeakerFilter({ 
-  searchQuery, 
-  onSearchChange, 
-  filters, 
-  activeFilter, 
-  onFilterChange 
+export default function SpeakerFilter({
+  searchQuery,
+  onSearchChange,
+  filters,
+  activeFilter,
+  onFilterChange
 }) {
   return (
     <div className="flex flex-col md:flex-row gap-6 items-center justify-between mb-12">
@@ -20,24 +20,23 @@ export default function SpeakerFilter({
           placeholder="Search by name..."
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="w-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-full py-3 pl-10 pr-4 text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all"
+          className="w-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-sm py-3 pl-10 pr-4 text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-transparent transition-all"
         />
       </div>
 
       {/* Filter Tabs */}
       <div className="flex flex-wrap items-center justify-center md:justify-end gap-2">
         {filters.map((filter) => (
-            <button
-              key={filter}
-              onClick={() => onFilterChange(filter)}
-              className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                activeFilter === filter
-                  ? "bg-blue-600 text-white shadow-lg shadow-blue-500/20"
-                  : "bg-slate-50 dark:bg-white/5 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-white/10"
+          <button
+            key={filter}
+            onClick={() => onFilterChange(filter)}
+            className={`px-5 py-2 rounded-sm text-sm font-medium transition-all duration-300 ${activeFilter === filter
+              ? "bg-orange-300 text-white shadow-lg shadow-orange-300/20"
+              : "bg-slate-50 dark:bg-white/5 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-white/10"
               }`}
-            >
-              {filter}
-            </button>
+          >
+            {filter}
+          </button>
         ))}
       </div>
     </div>

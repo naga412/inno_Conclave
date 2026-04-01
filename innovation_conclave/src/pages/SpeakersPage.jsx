@@ -96,13 +96,13 @@ export default function SpeakersPage() {
   });
 
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans selection:bg-blue-600 selection:text-white transition-colors duration-300">
+    <div className="min-h-screen text-slate-900 dark:text-slate-100 font-sans selection:bg-orange-600 selection:text-white transition-colors duration-300">
 
       {/* HERO SECTION */}
       <section className="relative pt-32 pb-16 md:pt-40 md:pb-24 overflow-hidden">
         {/* Abstract Background Elements */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-full flex justify-center pointer-events-none opacity-20 z-0">
-          <div className="w-[800px] h-[800px] bg-blue-600 rounded-full blur-[150px] mix-blend-multiply opacity-20 -top-64 absolute"></div>
+          <div className="w-[800px] h-[800px] bg-orange-300 rounded-full blur-[150px] mix-blend-multiply opacity-20 -top-64 absolute"></div>
         </div>
 
         {/* Soft Grid Background */}
@@ -110,7 +110,7 @@ export default function SpeakersPage() {
 
         <div className="relative z-10 container mx-auto px-6 text-center max-w-3xl">
           <h1 className="text-4xl md:text-6xl font-extrabold text-slate-900 dark:text-white mb-6 tracking-tight transition-colors duration-300">
-            Meet Our <span className="text-blue-600 dark:text-blue-500">Speakers</span>
+            Meet Our <span className="text-orange-300 dark:text-orange-300">Speakers</span>
           </h1>
           <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 transition-colors duration-300">
             Industry leaders, innovators, and visionaries shaping the future. Discover the brilliant minds behind Innovation Conclave 2026.
@@ -132,17 +132,17 @@ export default function SpeakersPage() {
       </section>
 
       {/* CTA SECTION */}
-      <section className="relative z-10 bg-gradient-to-b from-white to-slate-200 dark:bg-gradient-to-b dark:from-slate-950 dark:to-[#0b1120] py-24 transition-colors duration-300 text-center">
+      <section className="relative z-10 bg-gradient-to-b from-transparent to-slate-200 dark:bg-gradient-to-b dark:from-transparent dark:to-[#0b1120] py-24 transition-colors duration-300 text-center">
         <div className="container mx-auto px-6">
           <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6 transition-colors duration-300">Want to hear them speak?</h2>
           <p className="text-slate-600 dark:text-slate-400 mb-10 max-w-2xl mx-auto transition-colors duration-300">
             Check out the agenda to see exactly when and where these industry experts will be taking the stage.
           </p>
           <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-            <button className="w-full sm:w-auto px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold shadow-lg shadow-blue-600/20 transition-all hover:scale-105 active:scale-95">
+            <button className="w-full sm:w-auto px-8 py-4 bg-orange-300 hover:bg-orange-300 text-white rounded-sm font-bold shadow-lg shadow-orange-300/20 transition-all hover:scale-105 active:scale-95">
               Register Now
             </button>
-            <button className="w-full sm:w-auto px-8 py-4 bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-700 dark:text-white rounded-xl font-bold border border-slate-200 dark:border-white/10 transition-all">
+            <button className="w-full sm:w-auto px-8 py-4 bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-700 dark:text-white rounded-sm font-bold border border-slate-200 dark:border-white/10 transition-all">
               View Agenda
             </button>
           </div>

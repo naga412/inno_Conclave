@@ -38,14 +38,14 @@ export default function NetworkBackground() {
       draw() {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(59,130,246,0.7)';
+        ctx.fillStyle = 'rgba(234, 88, 12, 1)';
         ctx.fill();
       }
     }
 
     const initParticles = () => {
       particles = [];
-      const count = Math.min(Math.floor(canvas.width / 30), 60);
+      const count = Math.min(Math.floor(canvas.width / 30), 90);
       for (let i = 0; i < count; i++) particles.push(new Particle());
     };
 
@@ -58,7 +58,7 @@ export default function NetworkBackground() {
           const dist = Math.sqrt(dx * dx + dy * dy);
           if (dist < connectionDist) {
             ctx.beginPath();
-            ctx.strokeStyle = `rgba(59,130,246,${(1 - dist / connectionDist) * 0.4})`;
+            ctx.strokeStyle = `rgba(255,184,106,${(1 - dist / connectionDist) * 0.4})`;
             ctx.lineWidth = 1;
             ctx.moveTo(particles[a].x, particles[a].y);
             ctx.lineTo(particles[b].x, particles[b].y);
@@ -71,7 +71,7 @@ export default function NetworkBackground() {
           const mdist = Math.sqrt(mdx * mdx + mdy * mdy);
           if (mdist < connectionDist * 1.5) {
             ctx.beginPath();
-            ctx.strokeStyle = `rgba(168,85,247,${(1 - mdist / (connectionDist * 1.5)) * 0.8})`;
+            ctx.strokeStyle = `rgba(255,184,106,${(1 - mdist / (connectionDist * 1.5)) * 0.8})`;
             ctx.lineWidth = 1.5;
             ctx.moveTo(particles[a].x, particles[a].y);
             ctx.lineTo(mouse.x, mouse.y);
@@ -108,11 +108,11 @@ export default function NetworkBackground() {
   }, []);
 
   return (
-    <div className="fixed inset-0 z-[150] pointer-events-none overflow-hidden mix-blend-multiply dark:mix-blend-screen">
+    <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden mix-blend-multiply dark:mix-blend-screen">
 
       {/* Ghost Map — CSS dot-matrix radiating grid */}
       <div
-        className="absolute inset-0 z-0 opacity-20 dark:opacity-10"
+        className="absolute inset-0 z-0 opacity-20 dark:opacity-20"
         style={{
           backgroundImage: 'radial-gradient(circle, rgb(59,130,246) 1.5px, transparent 1.5px)',
           backgroundSize: '30px 30px',

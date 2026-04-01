@@ -7,8 +7,8 @@
     <title>innovation_conclave</title>
     <link href="/src/index.css" rel="stylesheet">
     <script>
-      // On page load or when changing themes, best to add inline in `head` to avoid FOUC
-      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      // Automatically default to light theme on fresh loads unless explicitly set to dark
+      if (localStorage.theme === 'dark') {
         document.documentElement.classList.add('dark')
       } else {
         document.documentElement.classList.remove('dark')

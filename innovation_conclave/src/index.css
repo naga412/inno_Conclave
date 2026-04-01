@@ -87,13 +87,13 @@ html {
 /* Custom scrollbar */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #10367D #EBEBEB;
+  scrollbar-color: #ea580c #EBEBEB;
 }
 
 /* Selection */
 ::selection {
-  background-color: #10367D;
-  color: #EBEBEB;
+  background-color: #ea580c;
+  color: #ffffff;
 }
 
 /* Focus styles */

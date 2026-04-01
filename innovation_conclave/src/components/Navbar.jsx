@@ -51,7 +51,7 @@ export default function Navbar() {
   };
 
   return (
-    <div className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? "pt-2" : "pt-4"
+    <div className={`fixed top-0 left-0 right-0 z-250 transition-all duration-500 ${scrolled ? "pt-2" : "pt-4"
       }`}>
       <div className={`mx-auto w-[90%] lg:w-[80%] rounded-lg transition-all duration-500 ${scrolled ? "bg-white/95 dark:bg-slate-950/95 backdrop-blur-md shadow-xl border border-white/20 dark:border-white/30" : " dark:bg-slate-950 bg-white shadow-lg border border-transparent dark:border-white/30"
         }`}>
@@ -60,24 +60,24 @@ export default function Navbar() {
           {/* LOGO */}
           <div className="group cursor-pointer flex-col justify-center flex items-start">
             <Link to="/" className="text-md md:text-3xl font-extrabold text-black dark:text-white tracking-tight hover:opacity-80 transition-opacity flex items-center gap-2">
-              {/* <span className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-cyan-500 shadow-lg shadow-blue-500/20 flex items-center justify-center border border-white/20">
+              {/* <span className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-300 to-orange-600 shadow-lg shadow-orange-300/20 flex items-center justify-center border border-white/20">
                             </span> */}
-              INNOVATION<span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-400">CONCLAVE</span>
+              INNOVATION<span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-300 to-orange-600">CONCLAVE</span>
             </Link>
-            <div className="h-0.5 w-0 group-hover:w-full bg-[#10367D] dark:bg-cyan-500 transition-all duration-500"></div>
+            <div className="h-0.5 w-0 group-hover:w-full bg-[#10367D] dark:bg-orange-600 transition-all duration-500"></div>
           </div>
 
           {/* TOGGLE & HAMBURGER */}
           <div className="flex items-center gap-3 md:gap-4">
             <button
               onClick={toggleTheme}
-              className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full bg-black/5 dark:bg-white/10 text-[#10367D] dark:text-white hover:bg-black/10 dark:hover:bg-white/20 transition-all duration-300 focus:outline-none"
+              className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-sm bg-black/5 dark:bg-white/10 text-[#10367D] dark:text-white hover:bg-black/10 dark:hover:bg-white/20 transition-all duration-300 focus:outline-none"
             >
               {isDark ? <Sun size={20} /> : <Moon size={20} />}
             </button>
             <button
               onClick={() => setOpen(!open)}
-              className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full bg-[#10367D] dark:bg-slate-800 text-[#EBEBEB] dark:text-white hover:bg-[#10367D]/80 dark:hover:bg-slate-700 transition-all duration-300 focus:outline-none"
+              className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-sm bg-[#10367D] dark:bg-slate-800 text-[#EBEBEB] dark:text-white hover:bg-[#10367D]/80 dark:hover:bg-slate-700 transition-all duration-300 focus:outline-none"
             >
               {open ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -104,9 +104,9 @@ export default function Navbar() {
               {/* COLUMN 2 */}
               <div className="space-y-3">
                 <h3 className="text-sm uppercase tracking-wider text-[#10367D]/50 dark:text-slate-500 mb-4">Explore</h3>
-                <MenuItem icon={<MapPin size={18} />} text="Venue" onClick={() => setOpen(false)} />
+                <MenuItem to="/venue" icon={<MapPin size={18} />} text="Venue" onClick={() => setOpen(false)} />
                 <MenuItem to="/login" icon={<LogIn size={18} />} text="Sign In" onClick={() => setOpen(false)} />
-                <MenuItem icon={<UserPlus size={18} />} text="Register" onClick={() => setOpen(false)} />
+                <MenuItem to="/register" icon={<UserPlus size={18} />} text="Register" onClick={() => setOpen(false)} />
               </div>
 
               {/* COLUMN 3 */}
@@ -128,7 +128,7 @@ export default function Navbar() {
                 </div>
 
                 {/* CTA Button */}
-                <button className="mt-6 bg-[#10367D] dark:bg-violet-600 text-[#EBEBEB] dark:text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#10367D]/90 dark:hover:bg-violet-700 transition-all duration-300 flex items-center justify-center gap-2 group">
+                <button className="mt-6 bg-violet-600 dark:bg-orange-600 text-[#EBEBEB] dark:text-white px-6 py-3 rounded-sm font-semibold hover:bg-orange-500/90 dark:hover:bg-violet-700 transition-all duration-300 flex items-center justify-center gap-2 group">
                   <span>Get Updates</span>
                   <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
                 </button>
@@ -152,7 +152,7 @@ function MenuItem({ icon, text, to, onClick }) {
       </span>
       <span className="relative text-[#10367D] dark:text-slate-200">
         {text}
-        <span className={`absolute bottom-0 left-0 h-0.5 bg-[#10367D] dark:bg-cyan-500 transition-all duration-300 ${hover ? "w-full" : "w-0"
+        <span className={`absolute bottom-0 left-0 h-0.5 bg-[#10367D] dark:bg-orange-500 transition-all duration-300 ${hover ? "w-full" : "w-0"
           }`}></span>
       </span>
     </>
@@ -189,7 +189,7 @@ function MenuItem({ icon, text, to, onClick }) {
 function ContactItem({ icon, text }) {
   return (
     <p className="flex items-center gap-3 text-sm text-[#10367D]/70 dark:text-slate-400 hover:text-[#10367D] dark:hover:text-white transition-colors group cursor-pointer">
-      <span className="p-2 bg-[#10367D]/10 dark:bg-white/5 rounded-lg group-hover:bg-[#10367D]/20 dark:group-hover:bg-white/10 transition-all">
+      <span className="p-2 bg-[#10367D]/10 dark:bg-white/5 rounded-sm group-hover:bg-[#10367D]/20 dark:group-hover:bg-white/10 transition-all">
         {icon}
       </span>
       {text}
@@ -199,7 +199,7 @@ function ContactItem({ icon, text }) {
 
 function SocialIcon({ icon }) {
   return (
-    <div className="p-3 bg-[#10367D]/10 dark:bg-white/5 rounded-xl text-[#10367D] dark:text-slate-300 hover:bg-[#10367D] dark:hover:bg-violet-600 hover:text-[#EBEBEB] dark:hover:text-white transition-all duration-300 cursor-pointer">
+    <div className="p-3 bg-[#10367D]/10 dark:bg-white/5 rounded-sm text-[#10367D] dark:text-slate-300 hover:bg-violet-600 dark:hover:bg-orange-600 hover:text-[#EBEBEB] dark:hover:text-white transition-all duration-300 cursor-pointer">
       {icon}
     </div>
   );

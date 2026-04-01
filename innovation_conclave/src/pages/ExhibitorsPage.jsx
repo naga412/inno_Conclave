@@ -2,113 +2,59 @@ import React, { useState } from "react";
 import ExhibitorFilter from "../components/exhibitors/ExhibitorFilter";
 import ExhibitorsGrid from "../components/exhibitors/ExhibitorsGrid";
 
-const MOCK_EXHIBITORS = [
-  {
-    id: 1,
-    name: "TechNova Labs",
-    category: "AI & Robotics",
-    booth: "A12",
-    logo: "https://ui-avatars.com/api/?name=TechNova+Labs&background=0D8ABC&color=fff&rounded=true&bold=true",
-    image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=800&q=80",
-    description: "Building intelligent automation solutions for the next generation of industrial manufacturing.",
-    website: "https://technova.com"
-  },
-  {
-    id: 2,
-    name: "GreenEarth Systems",
-    category: "Sustainability",
-    booth: "C05",
-    logo: "https://ui-avatars.com/api/?name=Green+Earth&background=059669&color=fff&rounded=true&bold=true",
-    image: "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?auto=format&fit=crop&w=800&q=80",
-    description: "Eco-friendly energy management platforms focusing on reducing carbon footprint for urban cities.",
-    website: "https://greenearth.io"
-  },
-  {
-    id: 3,
-    name: "QuantumBits",
-    category: "Technology",
-    booth: "B21",
-    logo: "https://ui-avatars.com/api/?name=Quantum+Bits&background=7C3AED&color=fff&rounded=true&bold=true",
-    image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80",
-    description: "Pioneering the future of quantum cryptography and secure communications for enterprise grade security.",
-    website: "https://quantumbits.com"
-  },
-  {
-    id: 4,
-    name: "BioHealth Innovate",
-    category: "Healthcare",
-    booth: "D14",
-    logo: "https://ui-avatars.com/api/?name=Bio+Health&background=E11D48&color=fff&rounded=true&bold=true",
-    image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80",
-    description: "Telemedicine and wearable health tracking devices integrated with real-time patient analytics.",
-    website: "https://biohealth.org"
-  },
-  {
-    id: 5,
-    name: "EduSphere",
-    category: "Education",
-    booth: "E08",
-    logo: "https://ui-avatars.com/api/?name=Edu+Sphere&background=D97706&color=fff&rounded=true&bold=true",
-    image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80",
-    description: "Interactive learning environments using AR/VR to revolutionize classroom experiences globally.",
-    website: "https://edusphere.edu"
-  },
-  {
-    id: 6,
-    name: "RoboFoundry",
-    category: "AI & Robotics",
-    booth: "A15",
-    logo: "https://ui-avatars.com/api/?name=Robo+Foundry&background=2563EB&color=fff&rounded=true&bold=true",
-    image: "https://images.unsplash.com/photo-1531746790731-6c087fecd65a?auto=format&fit=crop&w=800&q=80",
-    description: "Humanoid robotics for domestic assistance and specialized rescue operations in hazardous environments.",
-    website: "https://robofoundry.net"
-  },
-  {
-    id: 7,
-    name: "SmartCities Inc.",
-    category: "Technology",
-    booth: "B03",
-    logo: "https://ui-avatars.com/api/?name=Smart+Cities&background=4F46E5&color=fff&rounded=true&bold=true",
-    image: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=800&q=80",
-    description: "IoT infrastructure for optimized traffic management and waste reduction in developing smart cities.",
-    website: "https://smartcities.com"
-  },
-  {
-    id: 8,
-    name: "PureFlow Tech",
-    category: "Sustainability",
-    booth: "C12",
-    logo: "https://ui-avatars.com/api/?name=Pure+Flow&background=0891B2&color=fff&rounded=true&bold=true",
-    image: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=800&q=80",
-    description: "Advanced water filtration systems using nanotechnology to provide clean drinking water to remote areas.",
-    website: "https://pureflow.tech"
-  }
-];
+import { exhibitors as exhibitorsAPI } from "../api/client";
+import { Loader2 } from "lucide-react";
 
 const FILTERS = ["All", "Startups", "Technology", "AI & Robotics", "Education", "Healthcare", "Sustainability", "Sponsors"];
 
 export default function ExhibitorsPage() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [activeFilter, setActiveFilter] = useState("All");
+  const [searchQuery, setSearchQuery] = React.useState("");
+  const [activeFilter, setActiveFilter] = React.useState("All");
+  const [exhibitors, setExhibitors] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState("");
 
-  const filteredExhibitors = MOCK_EXHIBITORS.filter((exhibitor) => {
-    const matchesSearch = exhibitor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      exhibitor.description.toLowerCase().includes(searchQuery.toLowerCase());
+  React.useEffect(() => {
+    async function loadExhibitors() {
+      try {
+        const data = await exhibitorsAPI.getPublicAll();
+        const mapped = data.map(e => ({
+          id: e.id,
+          name: e.org_name,
+          category: e.org_type || "Startups", // fallback category if empty
+          booth: "TBA",
+          logo: null, // UI Avatars maybe?
+          image: e.poster_path ? `http://localhost:4000/uploads/exhibitors/${e.poster_path}` : null,
+          description: e.tagline || 'No description provided yet.',
+          website: null
+        }));
+        setExhibitors(mapped);
+      } catch (err) {
+        setError(err.message || "Failed to load exhibitors.");
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadExhibitors();
+  }, []);
 
-    // Simple filter logic: if activeFilter is "Startups" or "Sponsors", we don't have mock data for them yet, but we'll show empty or all
+  const filteredExhibitors = exhibitors.filter((exhibitor) => {
+    const matchesSearch = exhibitor.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      exhibitor.description?.toLowerCase().includes(searchQuery.toLowerCase());
+
     const matchesFilter = activeFilter === "All" || exhibitor.category === activeFilter;
 
     return matchesSearch && matchesFilter;
   });
 
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans selection:bg-blue-600 selection:text-white transition-colors duration-300">
+    <div className="min-h-screen text-slate-900 dark:text-slate-100 font-sans selection:bg-orange-600 selection:text-white transition-colors duration-300">
 
       {/* HERO SECTION */}
       <section className="relative pt-32 pb-16 md:pt-40 md:pb-24 overflow-hidden">
         {/* Abstract Background Elements */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-full flex justify-center pointer-events-none opacity-20 z-0">
-          <div className="w-[800px] h-[800px] bg-blue-600 rounded-full blur-[150px] mix-blend-multiply opacity-20 -top-64 absolute"></div>
+          <div className="w-[800px] h-[800px] bg-orange-300 rounded-full blur-[150px] mix-blend-multiply opacity-20 -top-64 absolute"></div>
         </div>
 
         {/* Soft Grid Background */}
@@ -116,7 +62,7 @@ export default function ExhibitorsPage() {
 
         <div className="relative z-10 container mx-auto px-6 text-center max-w-3xl">
           <h1 className="text-4xl md:text-6xl font-extrabold text-slate-900 dark:text-white mb-6 tracking-tight transition-colors duration-300">
-            Explore Our <span className="text-blue-600 dark:text-blue-500">Exhibitors</span>
+            Explore Our <span className="text-orange-300 dark:text-orange-300">Exhibitors</span>
           </h1>
           <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 transition-colors duration-300">
             Discover groundbreaking innovations, industry leaders, and visionary startups shaping the future technology landscape.
@@ -134,7 +80,19 @@ export default function ExhibitorsPage() {
           onFilterChange={setActiveFilter}
         />
 
-        <ExhibitorsGrid exhibitors={filteredExhibitors} />
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-20 text-slate-500">
+            <Loader2 className="w-10 h-10 animate-spin mb-4 text-orange-400" />
+            <p>Loading exhibitors...</p>
+          </div>
+        ) : error ? (
+          <div className="text-center py-20">
+            <p className="text-red-500 mb-4">{error}</p>
+            <button onClick={() => window.location.reload()} className="px-4 py-2 border border-slate-200 rounded-sm hover:bg-slate-50 text-slate-700">Try Again</button>
+          </div>
+        ) : (
+          <ExhibitorsGrid exhibitors={filteredExhibitors} />
+        )}
       </section>
 
       {/* HIGHLIGHTS SECTION (Optional info block) */}
@@ -143,19 +101,19 @@ export default function ExhibitorsPage() {
         <div className="container mx-auto px-6 max-w-5xl">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div>
-              <p className="text-3xl font-extrabold text-blue-900 dark:text-blue-400 mb-1">50+</p>
+              <p className="text-3xl font-extrabold text-orange-300 dark:text-orange-300 mb-1">50+</p>
               <p className="text-sm text-slate-400 dark:text-slate-500 uppercase tracking-widest font-semibold">Exhibitors</p>
             </div>
             <div>
-              <p className="text-3xl font-extrabold text-blue-900 mb-1">100+</p>
+              <p className="text-3xl font-extrabold text-orange-300 mb-1">100+</p>
               <p className="text-sm text-slate-400 uppercase tracking-widest font-semibold">Innovations</p>
             </div>
             <div>
-              <p className="text-3xl font-extrabold text-blue-900 mb-1">12</p>
+              <p className="text-3xl font-extrabold text-orange-300 mb-1">12</p>
               <p className="text-sm text-slate-400 uppercase tracking-widest font-semibold">Categories</p>
             </div>
             <div>
-              <p className="text-3xl font-extrabold text-blue-900 mb-1">Booth A-E</p>
+              <p className="text-3xl font-extrabold text-orange-300 mb-1">Booth A-E</p>
               <p className="text-sm text-slate-400 uppercase tracking-widest font-semibold">Floors</p>
             </div>
           </div>
@@ -163,17 +121,17 @@ export default function ExhibitorsPage() {
       </section>
 
       {/* CTA SECTION */}
-      <section className="relative z-10 py-24 bg-gradient-to-b from-white to-slate-200 dark:bg-gradient-to-b dark:from-slate-950 dark:to-[#0b1120] transition-colors duration-300 text-center">
+      <section className="relative z-10 py-24 bg-gradient-to-b from-transparent to-slate-200 dark:bg-gradient-to-b dark:from-transparent dark:to-[#0b1120] transition-colors duration-300 text-center">
         <div className="container mx-auto px-6">
           <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Become an Exhibitor</h2>
           <p className="text-slate-600 dark:text-slate-400 mb-10 max-w-2xl mx-auto">
             Want to showcase your innovation to thousands of attendees? Secure your booth and join the digital exhibition hall.
           </p>
           <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-            <button className="w-full sm:w-auto px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold shadow-lg shadow-blue-600/20 transition-all hover:scale-105 active:scale-95">
+            <button className="w-full sm:w-auto px-8 py-4 bg-orange-300 hover:bg-orange-300 text-white rounded-sm font-bold shadow-lg shadow-orange-300/20 transition-all hover:scale-105 active:scale-95">
               Apply Now
             </button>
-            <button className="w-full sm:w-auto px-8 py-4 bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-700 dark:text-white rounded-xl font-bold border border-slate-200 dark:border-white/10 transition-all">
+            <button className="w-full sm:w-auto px-8 py-4 bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-700 dark:text-white rounded-sm font-bold border border-slate-200 dark:border-white/10 transition-all">
               Exhibition Pack
             </button>
           </div>

@@ -12,7 +12,7 @@ export default function SpeakersGrid({ speakers }) {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8" >
       {speakers.map((speaker, idx) => (
         <SpeakerCard key={speaker.id || idx} index={idx} speaker={speaker} />
       ))}

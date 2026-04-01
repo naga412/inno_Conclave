@@ -25,7 +25,7 @@ const WorkshopFilter = ({ activeCategory, setActiveCategory, activeLevel, setAct
           placeholder="Search workshops by title or instructor..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 rounded-2xl py-4 pl-12 pr-4 transition-all focus:outline-none focus:ring-2 focus:ring-blue-600 text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500"
+          className="w-full border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 rounded-sm py-4 pl-12 pr-4 transition-all focus:outline-none focus:ring-2 focus:ring-orange-300 text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500"
         />
       </div>
 
@@ -39,11 +39,10 @@ const WorkshopFilter = ({ activeCategory, setActiveCategory, activeLevel, setAct
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                  activeCategory === cat
-                    ? "bg-blue-600 text-white shadow-lg shadow-blue-900/10"
-                    : "bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-white/10 border border-slate-200 dark:border-white/10"
-                }`}
+                className={`px-4 py-2 rounded-sm text-sm font-medium transition-all ${activeCategory === cat
+                  ? "bg-orange-300 text-white shadow-lg shadow-orange-300/10"
+                  : "bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-white/10 border border-slate-200 dark:border-white/10"
+                  }`}
               >
                 {cat}
               </button>
@@ -59,11 +58,10 @@ const WorkshopFilter = ({ activeCategory, setActiveCategory, activeLevel, setAct
               <button
                 key={level}
                 onClick={() => setActiveLevel(level)}
-                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                  activeLevel === level
-                    ? "bg-indigo-600 text-white shadow-lg shadow-indigo-900/10"
-                    : "bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-white/10 border border-slate-200 dark:border-white/10"
-                }`}
+                className={`px-4 py-2 rounded-sm text-sm font-medium transition-all ${activeLevel === level
+                  ? "bg-indigo-600 text-white shadow-lg shadow-indigo-900/10"
+                  : "bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-white/10 border border-slate-200 dark:border-white/10"
+                  }`}
               >
                 {level}
               </button>
