@@ -6,11 +6,11 @@
  */
 require('dotenv').config();
 const express = require('express');
-const cors    = require('cors');
-const path    = require('path');
-const fs      = require('fs');
+const cors = require('cors');
+const path = require('path');
+const fs = require('fs');
 
-const app  = express();
+const app = express();
 const PORT = process.env.PORT || 4000;
 
 // ─── Ensure upload directories exist ─────────────────────────────────────────
@@ -21,7 +21,7 @@ const PORT = process.env.PORT || 4000;
 
 // ─── Global Middleware ───────────────────────────────────────────────────────
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:3000'],
+  origin: ['http://localhost:5174', 'http://localhost:3000'],
   credentials: true,
 }));
 app.use(express.json());
@@ -31,12 +31,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // ─── Microservice Routes (API Gateway) ───────────────────────────────────────
-app.use('/api/auth',         require('./services/auth/auth.routes'));
+app.use('/api/auth', require('./services/auth/auth.routes'));
 app.use('/api/participants', require('./services/participants/participant.routes'));
-app.use('/api/exhibitors',   require('./services/exhibitors/exhibitor.routes'));
-app.use('/api/workshops',    require('./services/workshops/workshop.routes'));
-app.use('/api/agenda',       require('./services/agenda/agenda.routes'));
-app.use('/api/subscriptions',require('./services/subscriptions/subscription.routes'));
+app.use('/api/exhibitors', require('./services/exhibitors/exhibitor.routes'));
+app.use('/api/workshops', require('./services/workshops/workshop.routes'));
+app.use('/api/agenda', require('./services/agenda/agenda.routes'));
+app.use('/api/subscriptions', require('./services/subscriptions/subscription.routes'));
 
 
 // ─── Health Check ─────────────────────────────────────────────────────────────
