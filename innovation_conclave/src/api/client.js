@@ -102,6 +102,16 @@ export const exhibitors = {
   getPublicAll: () => request('/exhibitors/public/all'),
   getPublicDetails: (id) => request(`/exhibitors/public/${id}`),
   getPublicProjects: (id) => request(`/exhibitors/public/${id}/projects`),
+
+  addTeamMember: (formData) =>
+    request('/exhibitors/me/team', { method: 'POST', body: formData }),
+
+  getMyTeam: () => request('/exhibitors/me/team'),
+
+  removeTeamMember: (id) =>
+    request(`/exhibitors/me/team/${id}`, { method: 'DELETE' }),
+
+  getExhibitorTeam: (exhibitorId) => request(`/exhibitors/${exhibitorId}/team`),
 };
 
 // ── Agenda ────────────────────────────────────────────────────────────────────

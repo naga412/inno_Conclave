@@ -74,4 +74,28 @@ const findProjectsByExhibitor = async (exhibitorId) => {
   return rows;
 };
 
-module.exports = { findByEmail, findById, findAll, findApproved, create, updateStatus, createProject, findProjectsByExhibitor };
+const createTeamMember = async (exhibitorId, { name, role, email, photoPath }) => {
+  const [result] = await db.execute(
+    `INSERT INTO exhibitor_team_members (exhibitor_id, name, role, email, photo) VALUES (?, ?, ?, ?, ?)`,
+    [exhibitorId, name, role, email || null, photoPath || null]
+  );
+  return result.insertId;
+};
+
+const findTeamMembersByExhibitor = async (exhibitorId) => {
+  const [rows] = await db.execute(
+    `SELECT * FROM exhibitor_team_members WHERE exhibitor_id = ? ORDER BY created_at ASC`,
+    [exhibitorId]
+  );
+  return rows;
+};
+
+const deleteTeamMember = async (memberId, exhibitorId) => {
+  const [result] = await db.execute(
+    `DELETE FROM exhibitor_team_members WHERE id = ? AND exhibitor_id = ?`,
+    [memberId, exhibitorId]
+  );
+  return result.affectedRows;
+};
+
+module.exports = { findByEmail, findById, findAll, findApproved, create, updateStatus, createProject, findProjectsByExhibitor, createTeamMember, findTeamMembersByExhibitor, deleteTeamMember };

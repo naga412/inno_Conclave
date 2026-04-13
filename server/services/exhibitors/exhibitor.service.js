@@ -80,6 +80,25 @@ async function getPublicProjectsByExhibitor(exhibitorId) {
   return model.findProjectsByExhibitor(exhibitorId);
 }
 
+async function addTeamMember(exhibitorId, { name, role, email, files }) {
+  if (!name || !role)
+    throw Object.assign(new Error('Name and role are required'), { code: 400 });
+
+  const photoPath = files?.photo?.[0]?.filename || null;
+  const id = await model.createTeamMember(exhibitorId, { name, role, email, photoPath });
+  return { memberId: id, message: 'Team member added successfully' };
+}
+
+async function getTeamMembers(exhibitorId) {
+  return model.findTeamMembersByExhibitor(exhibitorId);
+}
+
+async function removeTeamMember(memberId, exhibitorId) {
+  const affected = await model.deleteTeamMember(memberId, exhibitorId);
+  if (!affected) throw Object.assign(new Error('Team member not found'), { code: 404 });
+  return { message: 'Team member removed' };
+}
+
 module.exports = { 
   register, 
   getAllExhibitors, 
@@ -89,5 +108,8 @@ module.exports = {
   changeStatus, 
   addProject, 
   getProjectsByExhibitor,
-  getPublicProjectsByExhibitor
+  getPublicProjectsByExhibitor,
+  addTeamMember,
+  getTeamMembers,
+  removeTeamMember,
 };

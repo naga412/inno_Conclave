@@ -11,6 +11,7 @@ import { useTheme } from '../hooks/useTheme';
 import { participants as partAPI, exhibitors as exAPI, workshops as wsAPI, agenda as agendaAPI, subscriptions as subscriptionAPI } from '../api/client';
 // import NetworkBackground from '../components/NetworkBackground';
 import Networktwo from '../components/Networktwo';
+import ExhibitorIDCard from '../components/ExhibitorIDCard';
 
 
 const STATUS_BADGE = {
@@ -61,11 +62,10 @@ function OverviewTab({ exhibitors, participants, workshops, setTab, subscriberCo
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard label="Total Participants" value={participants.length} sub={`Registered`} color="bg-orange-300 text-white dark:bg-transparent dark:text-orange-400" Icon={Users} delay={0} onClick={() => setSelectedTopic("participants")} isActive={selectedTopic === "participants"} />
         <StatCard label="Exhibitors" value={exhibitors.length} sub={`${approved} approved, ${pending} pending`} color="bg-purple-500 text-white dark:bg-transparent dark:text-purple-400" Icon={Presentation} delay={0.05} onClick={() => setSelectedTopic("exhibitors")} isActive={selectedTopic === "exhibitors"} />
         <StatCard label="Workshops" value={workshops.length} sub="2 per day" color="bg-indigo-500 text-white dark:bg-transparent dark:text-indigo-400" Icon={BookOpen} delay={0.1} onClick={() => setSelectedTopic("workshops")} isActive={selectedTopic === "workshops"} />
-        <StatCard label="Subscribers" value={subscriberCount} sub="Newsletter signups" color="bg-teal-500 text-white dark:bg-transparent dark:text-teal-400" Icon={Mail} delay={0.12} onClick={() => setTab("subscriptions")} />
         <StatCard label="Lunch Pending" value={lunchPending} sub="Awaiting verification" color="bg-amber-500 text-white dark:bg-transparent dark:text-amber-400" Icon={AlertCircle} delay={0.15} onClick={() => setSelectedTopic("lunch")} isActive={selectedTopic === "lunch"} />
       </div>
 
@@ -216,10 +216,14 @@ function OverviewTab({ exhibitors, participants, workshops, setTab, subscriberCo
 function ExhibitorsTab({ exhibitors, setExhibitors }) {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
-  const [viewMode, setViewMode] = useState("list"); // 'list' or 'projects'
+  const [viewMode, setViewMode] = useState("list"); // 'list' | 'projects' | 'team'
+  const [subTab, setSubTab] = useState("projects"); // 'projects' | 'team'
   const [selectedExhibitor, setSelectedExhibitor] = useState(null);
   const [projects, setProjects] = useState([]);
   const [loadingProjects, setLoadingProjects] = useState(false);
+  const [team, setTeam] = useState([]);
+  const [loadingTeam, setLoadingTeam] = useState(false);
+  const [idCardMember, setIdCardMember] = useState(null);
 
   const setStatus = async (id, status) => {
     try {
@@ -234,85 +238,61 @@ function ExhibitorsTab({ exhibitors, setExhibitors }) {
     return matchFilter && matchSearch;
   });
 
-  const viewProjects = async (e) => {
+  const viewExhibitorDetail = async (e, tab = 'projects') => {
     setSelectedExhibitor(e);
-    setViewMode("projects");
+    setViewMode("detail");
+    setSubTab(tab);
+    // Load both projects and team
     setLoadingProjects(true);
+    setLoadingTeam(true);
     setProjects([]);
+    setTeam([]);
     try {
       const data = await exAPI.getExhibitorProjects(e.id);
       setProjects(data);
-    } catch (err) {
-      alert("Failed to load projects: " + err.message);
-      setViewMode("list");
-    } finally {
-      setLoadingProjects(false);
-    }
+    } catch { /* ignore */ } finally { setLoadingProjects(false); }
+    try {
+      const tData = await exAPI.getExhibitorTeam(e.id);
+      setTeam(tData);
+    } catch { /* ignore */ } finally { setLoadingTeam(false); }
   };
 
   const goBack = () => {
     setViewMode("list");
     setSelectedExhibitor(null);
     setProjects([]);
+    setTeam([]);
+    setIdCardMember(null);
   };
 
   // Premium Project Card Component
   const ProjectCard = ({ p, idx }) => {
     const [imgIdx, setImgIdx] = useState(0);
     const imgs = p.images ? (typeof p.images === 'string' ? JSON.parse(p.images) : p.images) : [];
-
-    // Create dynamic layout variations
     const isWide = idx === 0 || idx % 7 === 0;
-
     return (
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: (idx % 8) * 0.05, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        className={`group relative rounded-sm overflow-hidden bg-white dark:bg-slate-900 shadow-xl shadow-slate-100/50 dark:shadow-none border border-slate-100 dark:border-white/10 transition-all duration-500 hover:-translate-y-2  flex flex-col ${isWide ? 'md:col-span-2 lg:col-span-2' : ''}`}
+        className={`group relative rounded-sm overflow-hidden bg-white dark:bg-slate-900 shadow-xl shadow-slate-100/50 dark:shadow-none border border-slate-100 dark:border-white/10 transition-all duration-500 hover:-translate-y-2 flex flex-col ${isWide ? 'md:col-span-2 lg:col-span-2' : ''}`}
       >
         {imgs.length > 0 ? (
           <div className={`relative w-full ${isWide ? 'h-72 sm:h-96' : 'h-64 sm:h-72'} bg-slate-100 dark:bg-black overflow-hidden shrink-0`}>
-            <img
-              src={`http://localhost:4000/uploads/exhibitors/${imgs[imgIdx]}`}
-              alt={p.title}
-              className="w-full h-full object-cover group-hover:scale-110 group-hover:opacity-90 transition-all duration-[1200ms] ease-out"
-            />
-            {/* Elegant Vignette */}
+            <img src={`http://localhost:4000/uploads/exhibitors/${imgs[imgIdx]}`} alt={p.title} className="w-full h-full object-cover group-hover:scale-110 group-hover:opacity-90 transition-all duration-[1200ms] ease-out" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-black/30 pointer-events-none mix-blend-multiply opacity-80" />
-
             {imgs.length > 1 && (
               <div className="absolute inset-0 flex items-center justify-between px-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <button
-                  onClick={(e) => { e.stopPropagation(); setImgIdx(i => (i === 0 ? imgs.length - 1 : i - 1)) }}
-                  className="w-10 h-10 flex items-center justify-center rounded-sm bg-white/10 backdrop-blur-xl text-white hover:bg-white/30 border border-white/20 transition-all shadow-xl active:scale-90"
-                >
-                  <ChevronLeft className="w-6 h-6" />
-                </button>
-                <button
-                  onClick={(e) => { e.stopPropagation(); setImgIdx(i => (i === imgs.length - 1 ? 0 : i + 1)) }}
-                  className="w-10 h-10 flex items-center justify-center rounded-sm bg-white/10 backdrop-blur-xl text-white hover:bg-white/30 border border-white/20 transition-all shadow-xl active:scale-90 rotate-180"
-                >
-                  <ChevronLeft className="w-6 h-6" />
-                </button>
+                <button onClick={(e) => { e.stopPropagation(); setImgIdx(i => (i === 0 ? imgs.length - 1 : i - 1)); }} className="w-10 h-10 flex items-center justify-center rounded-sm bg-white/10 backdrop-blur-xl text-white hover:bg-white/30 border border-white/20 transition-all shadow-xl active:scale-90"><ChevronLeft className="w-6 h-6" /></button>
+                <button onClick={(e) => { e.stopPropagation(); setImgIdx(i => (i === imgs.length - 1 ? 0 : i + 1)); }} className="w-10 h-10 flex items-center justify-center rounded-sm bg-white/10 backdrop-blur-xl text-white hover:bg-white/30 border border-white/20 transition-all shadow-xl active:scale-90 rotate-180"><ChevronLeft className="w-6 h-6" /></button>
               </div>
             )}
-            {imgs.length > 1 && (
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
-                {imgs.map((_, i) => (
-                  <div key={i} className={`h-1.5 rounded-full transition-all duration-300 ${i === imgIdx ? 'w-5 bg-orange-400 shadow-[0_0_10px_rgba(251,146,60,1)]' : 'w-2 bg-white/40'}`} />
-                ))}
-              </div>
-            )}
-            <div className="absolute top-5 right-5 z-10">
-              <span className="bg-black/40 backdrop-blur-md text-white px-3 py-1.5 rounded-sm text-[10px] font-extrabold uppercase tracking-widest border border-white/10 shadow-lg">Innovation</span>
-            </div>
+            {imgs.length > 1 && (<div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">{imgs.map((_, i) => (<div key={i} className={`h-1.5 rounded-full transition-all duration-300 ${i === imgIdx ? 'w-5 bg-orange-400 shadow-[0_0_10px_rgba(251,146,60,1)]' : 'w-2 bg-white/40'}`} />))}</div>)}
+            <div className="absolute top-5 right-5 z-10"><span className="bg-black/40 backdrop-blur-md text-white px-3 py-1.5 rounded-sm text-[10px] font-extrabold uppercase tracking-widest border border-white/10 shadow-lg">Innovation</span></div>
           </div>
         ) : (
           <div className={`relative w-full ${isWide ? 'h-72 sm:h-96' : 'h-64 sm:h-72'} bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 flex flex-col items-center justify-center gap-3 shrink-0`}>
-            <div className="p-4 rounded-sm bg-white dark:bg-slate-950 shadow-sm opacity-50">
-              <ImageIcon className="w-8 h-8 text-slate-400 dark:text-slate-600" />
-            </div>
+            <div className="p-4 rounded-sm bg-white dark:bg-slate-950 shadow-sm opacity-50"><ImageIcon className="w-8 h-8 text-slate-400 dark:text-slate-600" /></div>
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Awaiting Media Uploads</p>
           </div>
         )}
@@ -324,7 +304,7 @@ function ExhibitorsTab({ exhibitors, setExhibitors }) {
     );
   };
 
-  if (viewMode === 'projects' && selectedExhibitor) {
+  if (viewMode === 'detail' && selectedExhibitor) {
     return (
       <div className="flex flex-col gap-8 w-full max-w-[1400px] mx-auto min-h-[600px] pb-12">
         {/* Immersive Hero Header */}
@@ -334,19 +314,13 @@ function ExhibitorsTab({ exhibitors, setExhibitors }) {
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="relative rounded-sm overflow-hidden bg-slate-900 p-8 sm:p-12 lg:p-16 shadow-2xl flex flex-col lg:flex-row lg:items-end justify-between gap-10"
         >
-          {/* Full-bleed Poster Background if available */}
           {selectedExhibitor.poster_path && (
             <div className="absolute inset-0 z-0">
-              <img
-                src={`http://localhost:4000/uploads/exhibitors/${selectedExhibitor.poster_path}`}
-                alt=""
-                className="w-full h-full object-cover object-top opacity-30 grayscale-[0.5] contrast-125 scale-105"
-              />
+              <img src={`http://localhost:4000/uploads/exhibitors/${selectedExhibitor.poster_path}`} alt="" className="w-full h-full object-cover object-top opacity-30 grayscale-[0.5] contrast-125 scale-105" />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-slate-900/40" />
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(99,102,241,0.15),transparent_70%)]" />
             </div>
           )}
-
           {!selectedExhibitor.poster_path && (
             <div className="absolute inset-0 z-0 pointer-events-none mix-blend-screen opacity-60">
               <div className="absolute -top-32 -right-32 w-[30rem] h-[30rem] bg-indigo-600 rounded-full filter blur-[120px] opacity-70 animate-pulse" style={{ animationDuration: '4s' }} />
@@ -360,71 +334,132 @@ function ExhibitorsTab({ exhibitors, setExhibitors }) {
               <ArrowLeft className="w-4 h-4" /> Go Back
             </button>
             <div className="flex flex-wrap items-center gap-3 mb-4">
-              <span className="px-3 py-1 rounded-full bg-gradient-to-r from-orange-400 to-rose-400 text-white text-[10px] uppercase font-extrabold tracking-widest leading-none shadow-lg">
-                {selectedExhibitor.org_type} Showcase
-              </span>
-              <span className="text-white/60 text-xs font-bold uppercase tracking-widest px-3 border-l border-white/10">
-                {projects.length} Innovations Listed
-              </span>
+              <span className="px-3 py-1 rounded-full bg-gradient-to-r from-orange-400 to-rose-400 text-white text-[10px] uppercase font-extrabold tracking-widest leading-none shadow-lg">{selectedExhibitor.org_type} Showcase</span>
+              <span className="text-white/60 text-xs font-bold uppercase tracking-widest px-3 border-l border-white/10">{projects.length} Innovations · {team.length} Members</span>
             </div>
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400 leading-tight tracking-tight mb-4 drop-shadow-sm">
-              {selectedExhibitor.org_name}
-            </h2>
-            {selectedExhibitor.tagline && (
-              <p className="text-orange-200 font-bold text-lg max-w-xl italic opacity-90 mb-2">
-                "{selectedExhibitor.tagline}"
-              </p>
-            )}
-            <p className="text-slate-300 font-medium text-sm lg:text-base opacity-70">
-              POC: {selectedExhibitor.contact_name} · <a href={`mailto:${selectedExhibitor.email}`} className="hover:text-white transition-colors">{selectedExhibitor.email}</a>
-            </p>
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400 leading-tight tracking-tight mb-4 drop-shadow-sm">{selectedExhibitor.org_name}</h2>
+            {selectedExhibitor.tagline && (<p className="text-orange-200 font-bold text-lg max-w-xl italic opacity-90 mb-2">"{selectedExhibitor.tagline}"</p>)}
+            <p className="text-slate-300 font-medium text-sm lg:text-base opacity-70">POC: {selectedExhibitor.contact_name} · <a href={`mailto:${selectedExhibitor.email}`} className="hover:text-white transition-colors">{selectedExhibitor.email}</a></p>
           </div>
 
           <div className="relative z-10 shrink-0 flex flex-col gap-3">
             {selectedExhibitor.poster_path ? (
-              <div className="flex flex-col gap-3">
-                <a href={`http://localhost:4000/uploads/exhibitors/${selectedExhibitor.poster_path}`} target="_blank" rel="noreferrer"
-                  className="group relative w-full lg:w-72 h-40 rounded-sm bg-slate-800 border border-white/10 overflow-hidden shadow-2xl flex items-center justify-center transition-all hover:border-orange-400/50">
-                  <img
-                    src={`http://localhost:4000/uploads/exhibitors/${selectedExhibitor.poster_path}`}
-                    alt="Registration Poster"
-                    className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-90 transition-opacity"
-                  />
-                  <div className="relative z-10 flex flex-col items-center gap-2 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                    <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center">
-                      <ExternalLink className="w-5 h-5 text-white" />
-                    </div>
-                    <span className="text-[10px] font-extrabold uppercase tracking-widest text-white drop-shadow-md">View Full Poster</span>
-                  </div>
-                </a>
-              </div>
+              <a href={`http://localhost:4000/uploads/exhibitors/${selectedExhibitor.poster_path}`} target="_blank" rel="noreferrer" className="group relative w-full lg:w-72 h-40 rounded-sm bg-slate-800 border border-white/10 overflow-hidden shadow-2xl flex items-center justify-center transition-all hover:border-orange-400/50">
+                <img src={`http://localhost:4000/uploads/exhibitors/${selectedExhibitor.poster_path}`} alt="Registration Poster" className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-90 transition-opacity" />
+                <div className="relative z-10 flex flex-col items-center gap-2 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                  <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center"><ExternalLink className="w-5 h-5 text-white" /></div>
+                  <span className="text-[10px] font-extrabold uppercase tracking-widest text-white drop-shadow-md">View Full Poster</span>
+                </div>
+              </a>
             ) : (
-              <div className="w-full px-8 py-5 rounded-sm bg-white/5 border border-white/10 text-white/50 text-xs font-bold uppercase tracking-widest text-center cursor-not-allowed">
-                No Poster Provided
-              </div>
+              <div className="w-full px-8 py-5 rounded-sm bg-white/5 border border-white/10 text-white/50 text-xs font-bold uppercase tracking-widest text-center cursor-not-allowed">No Poster Provided</div>
             )}
           </div>
         </motion.div>
 
-        {loadingProjects ? (
-          <div className="flex flex-col items-center justify-center py-32 rounded-sm">
-            <div className="w-20 h-20 relative">
-              <div className="absolute inset-0 rounded-full border-4 border-slate-200 dark:border-white/5" />
-              <div className="absolute inset-0 rounded-full border-4 border-orange-400 border-t-transparent animate-spin" />
+        {/* Sub Tabs */}
+        <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-900/50 border border-slate-200 dark:border-white/10 rounded-sm p-1 self-start">
+          {[['projects', 'Projects', projects.length], ['team', 'Team Members', team.length]].map(([key, label, count]) => (
+            <button key={key} onClick={() => setSubTab(key)}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-sm text-sm font-bold transition-all ${subTab === key ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white'}`}>
+              {label}
+              <span className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold ${subTab === key ? 'bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400' : 'bg-slate-200 dark:bg-white/10 text-slate-500'}`}>{count}</span>
+            </button>
+          ))}
+        </div>
+
+        {/* Projects Sub-tab */}
+        {subTab === 'projects' && (
+          loadingProjects ? (
+            <div className="flex flex-col items-center justify-center py-32 rounded-sm">
+              <div className="w-20 h-20 relative">
+                <div className="absolute inset-0 rounded-full border-4 border-slate-200 dark:border-white/5" />
+                <div className="absolute inset-0 rounded-full border-4 border-orange-400 border-t-transparent animate-spin" />
+              </div>
+              <p className="mt-8 text-xs font-bold text-slate-400 uppercase tracking-widest animate-pulse">Loading Projects...</p>
             </div>
-            <p className="mt-8 text-xs font-bold text-slate-400 uppercase tracking-widest animate-pulse">Synchronizing Grid Dataset...</p>
-          </div>
-        ) : projects.length === 0 ? (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-center py-32 bg-slate-50 dark:bg-slate-900/40 rounded-[2rem] border border-dashed border-slate-200 dark:border-white/10 shadow-inner">
-            <div className="w-20 h-20 rounded-sm bg-white dark:bg-black shadow-xl border border-slate-100 dark:border-white/5 flex items-center justify-center mx-auto mb-6 rotate-3">
-              <Presentation className="w-8 h-8 text-slate-300 dark:text-slate-600" />
+          ) : projects.length === 0 ? (
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-center py-32 bg-slate-50 dark:bg-slate-900/40 rounded-[2rem] border border-dashed border-slate-200 dark:border-white/10 shadow-inner">
+              <div className="w-20 h-20 rounded-sm bg-white dark:bg-black shadow-xl border border-slate-100 dark:border-white/5 flex items-center justify-center mx-auto mb-6 rotate-3"><Presentation className="w-8 h-8 text-slate-300 dark:text-slate-600" /></div>
+              <h3 className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-2">Blank Canvas</h3>
+              <p className="text-slate-500 max-w-sm mx-auto font-medium">No projects added yet.</p>
+            </motion.div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8 auto-rows-[max-content]">
+              {projects.map((p, idx) => <ProjectCard key={p.id} p={p} idx={idx} />)}
             </div>
-            <h3 className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-2">Blank Canvas</h3>
-            <p className="text-slate-500 max-w-sm mx-auto font-medium">This exhibitor hasn't published any dedicated innovation profiles to their portfolio yet.</p>
-          </motion.div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8 auto-rows-[max-content]">
-            {projects.map((p, idx) => <ProjectCard key={p.id} p={p} idx={idx} />)}
+          )
+        )}
+
+        {/* Team Members Sub-tab */}
+        {subTab === 'team' && (
+          loadingTeam ? (
+            <div className="flex flex-col items-center justify-center py-20 bg-white dark:bg-black rounded-sm border border-slate-100 dark:border-white/10">
+              <div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-sm animate-spin" />
+              <p className="mt-6 text-xs font-bold text-slate-500 uppercase tracking-widest animate-pulse">Loading Team...</p>
+            </div>
+          ) : team.length === 0 ? (
+            <div className="text-center py-20 bg-white/50 dark:bg-white/5 rounded-sm border border-dashed border-slate-200 dark:border-white/10">
+              <div className="w-16 h-16 rounded-sm bg-slate-100 dark:bg-white/5 flex items-center justify-center mx-auto mb-4"><Users className="w-8 h-8 text-slate-300 dark:text-slate-600" /></div>
+              <h3 className="text-lg font-extrabold text-slate-900 dark:text-white">No Team Members</h3>
+              <p className="text-sm text-slate-500 dark:text-slate-400 mt-2">This exhibitor hasn't added any team members yet.</p>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                {team.map((member) => {
+                  const initials = member.name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+                  const photoUrl = member.photo ? `http://localhost:4000/uploads/exhibitors/${member.photo}` : null;
+                  return (
+                    <motion.div
+                      key={member.id}
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="flex flex-col items-center gap-3 p-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-sm hover:border-indigo-300 dark:hover:border-indigo-500/40 hover:shadow-md transition-all"
+                    >
+                      {photoUrl ? (
+                        <img src={photoUrl} alt={member.name} className="w-16 h-16 rounded-full object-cover border-2 border-indigo-400 shadow-md" />
+                      ) : (
+                        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center border-2 border-indigo-400 shadow-md">
+                          <span className="text-white font-extrabold text-lg">{initials}</span>
+                        </div>
+                      )}
+                      <div className="text-center">
+                        <p className="font-extrabold text-slate-900 dark:text-white text-sm leading-tight">{member.name}</p>
+                        <span className="inline-block mt-1 px-2.5 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 text-[10px] font-bold">{member.role}</span>
+                        {member.email && <p className="text-[10px] text-slate-400 mt-1 truncate max-w-[140px]">{member.email}</p>}
+                      </div>
+                      <button
+                        onClick={() => setIdCardMember(member)}
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-sm bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-bold transition-all hover:scale-105 active:scale-95 shadow-sm shadow-indigo-600/30"
+                      >
+                        <Download className="w-3 h-3" /> Download ID Card
+                      </button>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+          )
+        )}
+
+        {/* ID Card Modal (Admin) */}
+        {idCardMember && selectedExhibitor && (
+          <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-slate-900/70 dark:bg-black/90 backdrop-blur-md">
+            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-white dark:bg-slate-900 w-full max-w-sm rounded-sm overflow-hidden shadow-2xl">
+              <div className="px-6 py-4 border-b border-slate-100 dark:border-white/10 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Download className="w-4 h-4 text-indigo-500" />
+                  <h3 className="font-extrabold text-slate-900 dark:text-white">Exhibitor ID Card</h3>
+                </div>
+                <button onClick={() => setIdCardMember(null)} className="p-1.5 text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10 rounded-sm transition-colors">
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+              <div className="p-6">
+                <ExhibitorIDCard member={idCardMember} exhibitor={selectedExhibitor} />
+              </div>
+            </motion.div>
           </div>
         )}
       </div>
@@ -482,53 +517,31 @@ function ExhibitorsTab({ exhibitors, setExhibitors }) {
                   <td className="px-5 py-4">
                     <div className="flex flex-col gap-1.5">
                       {e.poster_path && (
-                        <a
-                          href={`http://localhost:4000/uploads/exhibitors/${e.poster_path}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 text-[11px] text-orange-300 dark:text-orange-300 font-bold hover:underline hover:text-orange-300 dark:hover:text-orange-300 transition-colors"
-                        >
+                        <a href={`http://localhost:4000/uploads/exhibitors/${e.poster_path}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-[11px] text-orange-300 dark:text-orange-300 font-bold hover:underline hover:text-orange-300 dark:hover:text-orange-300 transition-colors">
                           <FileText className="w-3.5 h-3.5 inline mr-1" /> View Poster
                         </a>
                       )}
                       {e.payment_proof && (
-                        <a
-                          href={`http://localhost:4000/uploads/exhibitors/${e.payment_proof}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 text-[11px] text-emerald-600 dark:text-emerald-400 font-bold hover:underline hover:text-emerald-800 dark:hover:text-emerald-300 transition-colors"
-                        >
+                        <a href={`http://localhost:4000/uploads/exhibitors/${e.payment_proof}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-[11px] text-emerald-600 dark:text-emerald-400 font-bold hover:underline hover:text-emerald-800 dark:hover:text-emerald-300 transition-colors">
                           <CreditCard className="w-3.5 h-3.5 inline mr-1" /> View Payment
                         </a>
                       )}
-                      {!e.poster_path && !e.payment_proof && (
-                        <span className="text-[10px] text-slate-400">No files</span>
-                      )}
+                      {!e.poster_path && !e.payment_proof && (<span className="text-[10px] text-slate-400">No files</span>)}
                     </div>
                   </td>
                   <td className="px-5 py-4"><Badge status={e.status} /></td>
                   <td className="px-5 py-4">
                     {e.status === "pending" ? (
-                      <div className="flex gap-2">
-                        <button onClick={() => setStatus(e.id, "approved")}
-                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-sm bg-emerald-600 text-white text-[11px] font-bold hover:bg-emerald-500 transition-colors">
-                          <CheckCircle2 className="w-3.5 h-3.5" /> Approve
-                        </button>
-                        <button onClick={() => setStatus(e.id, "rejected")}
-                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-sm bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/30 text-[11px] font-bold hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors">
-                          <XCircle className="w-3.5 h-3.5" /> Reject
-                        </button>
+                      <div className="flex gap-2 flex-wrap">
+                        <button onClick={() => setStatus(e.id, "approved")} className="flex items-center gap-1.5 px-3 py-1.5 rounded-sm bg-emerald-600 text-white text-[11px] font-bold hover:bg-emerald-500 transition-colors"><CheckCircle2 className="w-3.5 h-3.5" /> Approve</button>
+                        <button onClick={() => setStatus(e.id, "rejected")} className="flex items-center gap-1.5 px-3 py-1.5 rounded-sm bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/30 text-[11px] font-bold hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors"><XCircle className="w-3.5 h-3.5" /> Reject</button>
                       </div>
                     ) : (
-                      <button onClick={() => setStatus(e.id, "pending")}
-                        className="text-[11px] font-bold text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 underline">
-                        Reset
-                      </button>
+                      <button onClick={() => setStatus(e.id, "pending")} className="text-[11px] font-bold text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 underline">Reset</button>
                     )}
-                    <div className="mt-2">
-                      <button onClick={() => viewProjects(e)} className="text-[11px] font-bold text-orange-400 hover:text-orange-500 underline">
-                        View Projects explorer
-                      </button>
+                    <div className="flex gap-2 mt-2 flex-wrap">
+                      <button onClick={() => viewExhibitorDetail(e, 'projects')} className="text-[11px] font-bold text-orange-400 hover:text-orange-500 underline">Projects</button>
+                      <button onClick={() => viewExhibitorDetail(e, 'team')} className="text-[11px] font-bold text-indigo-400 hover:text-indigo-500 underline">Team</button>
                     </div>
                   </td>
                 </tr>
@@ -724,7 +737,7 @@ function WorkshopsTab({ workshops, setWorkshops }) {
   };
 
   const CATEGORY_COLORS = {
-    AI: "bg-orange-300 dark:bg-orange-300/30 text-orange-300",
+    AI: "bg-orange-50 dark:bg-orange-300/30 text-orange-300",
     Web3: "bg-purple-100 dark:bg-purple-900/30 text-purple-600",
     Entrepreneurship: "bg-amber-100 dark:bg-amber-900/30 text-amber-600",
     GreenTech: "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600",
@@ -1201,7 +1214,7 @@ function SubscriptionsTab({ subscriptions }) {
           <h2 className="text-xl font-extrabold text-slate-900 dark:text-white">Newsletter Subscriptions</h2>
           <p className="text-xs text-slate-500 font-medium">Capture and manage email leads from the website footer</p>
         </div>
-        <button 
+        <button
           onClick={exportEmails}
           disabled={subscriptions.length === 0}
           className="flex items-center gap-2 px-6 py-3 rounded-sm bg-orange-300 text-white font-extrabold text-xs uppercase tracking-widest hover:bg-orange-300 transition-all shadow-lg shadow-orange-300/20 disabled:opacity-50"

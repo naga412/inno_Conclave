@@ -91,6 +91,38 @@ async function getPublicProjects(req, res) {
   } catch (err) { return handleErr(res, err); }
 }
 
+// POST /api/exhibitors/me/team
+async function addTeamMember(req, res) {
+  try {
+    const result = await service.addTeamMember(req.user.id, { ...req.body, files: req.files });
+    return R.created(res, result);
+  } catch (err) { return handleErr(res, err); }
+}
+
+// GET /api/exhibitors/me/team
+async function getMyTeam(req, res) {
+  try {
+    const list = await service.getTeamMembers(req.user.id);
+    return R.ok(res, list);
+  } catch (err) { return handleErr(res, err); }
+}
+
+// DELETE /api/exhibitors/me/team/:memberId
+async function removeTeamMember(req, res) {
+  try {
+    const result = await service.removeTeamMember(req.params.memberId, req.user.id);
+    return R.ok(res, result);
+  } catch (err) { return handleErr(res, err); }
+}
+
+// GET /api/exhibitors/:id/team (Admin)
+async function getExhibitorTeam(req, res) {
+  try {
+    const list = await service.getTeamMembers(req.params.id);
+    return R.ok(res, list);
+  } catch (err) { return handleErr(res, err); }
+}
+
 module.exports = { 
   register, 
   getAll, 
@@ -101,5 +133,9 @@ module.exports = {
   getExhibitorProjects,
   getPublicList,
   getPublicDetails,
-  getPublicProjects
+  getPublicProjects,
+  addTeamMember,
+  getMyTeam,
+  removeTeamMember,
+  getExhibitorTeam,
 };

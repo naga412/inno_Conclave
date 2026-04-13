@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useEffect, useState, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import {
   CalendarDays, Users, Upload, X, Image as ImageIcon,
   MapPin, QrCode, Bell, LogOut, Star, Sun, Moon, Loader2, Plus, ArrowRight,
-  CheckCircle2, XCircle, Clock, PartyPopper, Trophy, FileText, ExternalLink
+  CheckCircle2, XCircle, Clock, PartyPopper, Trophy, FileText, ExternalLink,
+  UserPlus, Trash2, Download, UserCheck, ChevronDown
 } from 'lucide-react';
 import { useTheme } from '../hooks/useTheme';
 import { exhibitors as exAPI, agenda as agendaAPI } from '../api/client';
+import ExhibitorIDCard from '../components/ExhibitorIDCard';
 
 const notices = [
   "Please bring 3 printed copies of your project poster to the event.",
@@ -26,6 +28,14 @@ export default function ExhibitorDashboard() {
   const [schedule, setSchedule] = useState([]);
   const [error, setError] = useState("");
 
+  // Team member state
+  const [team, setTeam] = useState([]);
+  const [showTeamModal, setShowTeamModal] = useState(false);
+  const [showIDCardModal, setShowIDCardModal] = useState(false);
+  const [selectedMember, setSelectedMember] = useState(null);
+  const [memberForm, setMemberForm] = useState({ name: '', role: '', email: '', photo: null });
+  const [submittingMember, setSubmittingMember] = useState(false);
+
   useEffect(() => {
     const token = localStorage.getItem("ic_token");
     const role = localStorage.getItem("ic_role");
@@ -36,11 +46,13 @@ export default function ExhibitorDashboard() {
     Promise.all([
       exAPI.getMe(),
       exAPI.getMyProjects(),
+      exAPI.getMyTeam().catch(() => []),
       agendaAPI.getAll().catch(() => [])
     ])
-      .then(([profData, projData, agendaData]) => {
+      .then(([profData, projData, teamData, agendaData]) => {
         setProfile(profData);
         setProjects(projData || []);
+        setTeam(teamData || []);
 
         const mapped = agendaData.map(a => ({
           time: a.time_label,
@@ -89,6 +101,42 @@ export default function ExhibitorDashboard() {
     localStorage.removeItem("ic_role");
     localStorage.removeItem("ic_user");
     navigate("/login");
+  };
+
+  const handleMemberSubmit = async (ev) => {
+    ev.preventDefault();
+    setSubmittingMember(true);
+    const fd = new FormData();
+    fd.append('name', memberForm.name);
+    fd.append('role', memberForm.role);
+    if (memberForm.email) fd.append('email', memberForm.email);
+    if (memberForm.photo) fd.append('photo', memberForm.photo);
+    try {
+      await exAPI.addTeamMember(fd);
+      const updatedTeam = await exAPI.getMyTeam();
+      setTeam(updatedTeam);
+      setShowTeamModal(false);
+      setMemberForm({ name: '', role: '', email: '', photo: null });
+    } catch (err) {
+      alert('Failed to add member: ' + err.message);
+    } finally {
+      setSubmittingMember(false);
+    }
+  };
+
+  const handleRemoveMember = async (memberId) => {
+    if (!confirm('Remove this team member?')) return;
+    try {
+      await exAPI.removeTeamMember(memberId);
+      setTeam(prev => prev.filter(m => m.id !== memberId));
+    } catch (err) {
+      alert('Failed to remove: ' + err.message);
+    }
+  };
+
+  const openIDCard = (member) => {
+    setSelectedMember(member);
+    setShowIDCardModal(true);
   };
 
   if (loading) {
@@ -194,7 +242,7 @@ export default function ExhibitorDashboard() {
           {/* Stats Row */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { label: "Status", value: e.status.charAt(0).toUpperCase() + e.status.slice(1), icon: Star, color: "text-orange-600", bg: "bg-orange-600 dark:bg-orange-600/20" },
+              { label: "Status", value: e.status.charAt(0).toUpperCase() + e.status.slice(1), icon: Star, color: "text-orange-600", bg: "bg-orange-50 dark:bg-orange-600/20" },
               { label: "Type", value: e.org_type === "college" ? "College" : "Startup", icon: Users, color: "text-purple-500", bg: "bg-purple-50 dark:bg-purple-900/20" },
               { label: "Contact", value: e.contact_name, icon: Users, color: "text-emerald-500", bg: "bg-emerald-50 dark:bg-emerald-900/20" },
               { label: "Days to Event", value: "3", icon: CalendarDays, color: "text-amber-500", bg: "bg-amber-50 dark:bg-amber-900/20" },
@@ -214,6 +262,85 @@ export default function ExhibitorDashboard() {
               </motion.div>
             ))}
           </div>
+
+          {/* Team Members Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.18 }}
+            className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-white/10 rounded-sm p-6 shadow-sm"
+          >
+            <div className="flex items-center justify-between gap-4 mb-6">
+              <div className="flex items-center gap-2">
+                <Users className="w-5 h-5 text-indigo-500" />
+                <h2 className="font-extrabold text-slate-900 dark:text-white text-lg">My Team</h2>
+                <span className="ml-1 px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 text-[11px] font-bold">{team.length}</span>
+              </div>
+              <button
+                onClick={() => setShowTeamModal(true)}
+                className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-sm text-sm font-bold shadow-lg shadow-indigo-600/20 transition-all hover:scale-105 active:scale-95"
+              >
+                <UserPlus className="w-4 h-4" /> Add Member
+              </button>
+            </div>
+
+            {team.length === 0 ? (
+              <div className="text-center py-10 bg-slate-50 dark:bg-slate-800/50 rounded-sm border border-dashed border-slate-200 dark:border-white/10">
+                <div className="w-12 h-12 bg-white dark:bg-slate-900 rounded-sm flex items-center justify-center mx-auto mb-3 shadow-sm">
+                  <Users className="w-5 h-5 text-slate-400" />
+                </div>
+                <p className="text-slate-500 tracking-wide font-medium text-sm">No team members added yet.</p>
+                <p className="text-xs text-slate-400 mt-1">Add your team — each member gets a downloadable ID card.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                {team.map((member) => {
+                  const initials = member.name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+                  const photoUrl = member.photo ? `http://localhost:4000/uploads/exhibitors/${member.photo}` : null;
+                  return (
+                    <motion.div
+                      key={member.id}
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="group relative flex flex-col items-center gap-3 p-5 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-white/10 rounded-sm hover:border-indigo-300 dark:hover:border-indigo-500/40 transition-all hover:shadow-md"
+                    >
+                      {/* Remove button */}
+                      <button
+                        onClick={() => handleRemoveMember(member.id)}
+                        className="absolute top-2 right-2 p-1 rounded-sm text-slate-300 dark:text-slate-600 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all opacity-0 group-hover:opacity-100"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+
+                      {/* Photo/Avatar */}
+                      {photoUrl ? (
+                        <img src={photoUrl} alt={member.name} className="w-16 h-16 rounded-full object-cover border-2 border-indigo-400 shadow-md" />
+                      ) : (
+                        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center border-2 border-indigo-400 shadow-md">
+                          <span className="text-white font-extrabold text-lg">{initials}</span>
+                        </div>
+                      )}
+
+                      {/* Info */}
+                      <div className="text-center">
+                        <p className="font-extrabold text-slate-900 dark:text-white text-sm leading-tight">{member.name}</p>
+                        <span className="inline-block mt-1 px-2.5 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 text-[10px] font-bold">{member.role}</span>
+                        {member.email && <p className="text-[10px] text-slate-400 mt-1 truncate max-w-[140px]">{member.email}</p>}
+                      </div>
+
+                      {/* Download ID Card */}
+                      <button
+                        onClick={() => openIDCard(member)}
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-sm bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-bold transition-all hover:scale-105 active:scale-95 shadow-sm shadow-indigo-600/30"
+                      >
+                        <Download className="w-3 h-3" /> Download ID Card
+                      </button>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            )}
+          </motion.div>
 
           {/* Projects Section */}
           <motion.div
@@ -322,7 +449,7 @@ export default function ExhibitorDashboard() {
                 <p className="text-[10px] text-slate-400 uppercase tracking-widest font-bold mb-4">Registration Documents</p>
                 <div className="grid grid-cols-1 gap-3">
                   {e.poster_path && (
-                    <a href={`http://localhost:4000/uploads/exhibitors/${e.poster_path}`} target="_blank" rel="noreferrer" 
+                    <a href={`http://localhost:4000/uploads/exhibitors/${e.poster_path}`} target="_blank" rel="noreferrer"
                       className="group relative h-32 rounded-sm bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 overflow-hidden flex items-center justify-center transition-all hover:border-orange-600/50">
                       <img src={`http://localhost:4000/uploads/exhibitors/${e.poster_path}`} alt="Poster" className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-50 transition-opacity" />
                       <div className="relative z-10 flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20">
@@ -439,6 +566,88 @@ export default function ExhibitorDashboard() {
                 </button>
               </div>
             </form>
+          </motion.div>
+        </div>
+      )}
+      {/* Add Team Member Modal */}
+      {showTeamModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 dark:bg-black/80 backdrop-blur-md">
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-white dark:bg-slate-900 w-full max-w-md rounded-sm overflow-hidden shadow-2xl">
+            <div className="px-6 py-5 border-b border-slate-100 dark:border-white/10 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <UserPlus className="w-5 h-5 text-indigo-500" />
+                <h3 className="font-extrabold text-slate-900 dark:text-white text-lg">Add Team Member</h3>
+              </div>
+              <button onClick={() => setShowTeamModal(false)} className="p-2 text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10 rounded-sm transition-colors">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <form onSubmit={handleMemberSubmit} className="p-6 flex flex-col gap-5">
+              <div>
+                <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Full Name *</label>
+                <input
+                  type="text" required
+                  value={memberForm.name}
+                  onChange={ev => setMemberForm({ ...memberForm, name: ev.target.value })}
+                  className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none dark:text-white"
+                  placeholder="Member's full name"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Role / Designation *</label>
+                <input
+                  type="text" required
+                  value={memberForm.role}
+                  onChange={ev => setMemberForm({ ...memberForm, role: ev.target.value })}
+                  className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none dark:text-white"
+                  placeholder="e.g. Team Lead, Developer, Designer"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Email (Optional)</label>
+                <input
+                  type="email"
+                  value={memberForm.email}
+                  onChange={ev => setMemberForm({ ...memberForm, email: ev.target.value })}
+                  className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none dark:text-white"
+                  placeholder="member@email.com"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Photo (Optional)</label>
+                <label className="flex flex-col items-center justify-center p-5 border-2 border-dashed border-slate-200 dark:border-white/10 rounded-sm hover:border-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-900/10 transition-colors cursor-pointer group">
+                  <input type="file" accept="image/*" className="hidden" onChange={ev => setMemberForm({ ...memberForm, photo: ev.target.files[0] || null })} />
+                  <div className="w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded-sm flex items-center justify-center mb-2 group-hover:bg-white dark:group-hover:bg-slate-700 transition-colors shadow-sm">
+                    <ImageIcon className="w-5 h-5 text-slate-400 group-hover:text-indigo-500 transition-colors" />
+                  </div>
+                  <p className="text-sm font-bold text-slate-600 dark:text-slate-300">{memberForm.photo ? memberForm.photo.name : 'Click to upload photo'}</p>
+                  <p className="text-xs text-slate-400 mt-0.5">JPG, PNG, WEBP</p>
+                </label>
+              </div>
+              <button type="submit" disabled={submittingMember} className="w-full flex items-center justify-center gap-2 py-4 rounded-sm bg-indigo-600 hover:bg-indigo-500 text-white font-bold shadow-lg shadow-indigo-600/20 transition-all disabled:opacity-70">
+                {submittingMember ? <Loader2 className="w-5 h-5 animate-spin" /> : <><UserPlus className="w-4 h-4" /> Add to Team</>}
+              </button>
+            </form>
+          </motion.div>
+        </div>
+      )}
+
+      {/* ID Card Modal */}
+      {showIDCardModal && selectedMember && profile && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/70 dark:bg-black/90 backdrop-blur-md">
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-white dark:bg-slate-900 w-full max-w-sm rounded-sm overflow-hidden shadow-2xl">
+            <div className="px-6 py-4 border-b border-slate-100 dark:border-white/10 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Download className="w-4 h-4 text-indigo-500" />
+                <h3 className="font-extrabold text-slate-900 dark:text-white">Exhibitor ID Card</h3>
+              </div>
+              <button onClick={() => { setShowIDCardModal(false); setSelectedMember(null); }} className="p-1.5 text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10 rounded-sm transition-colors">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="p-6">
+              <ExhibitorIDCard member={selectedMember} exhibitor={profile} />
+            </div>
           </motion.div>
         </div>
       )}

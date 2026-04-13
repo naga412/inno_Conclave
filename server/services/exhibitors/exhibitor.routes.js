@@ -83,4 +83,32 @@ router.get('/me/projects', requireExhibitor, controller.getMyProjects);
  */
 router.get('/:id/projects', requireAdmin, controller.getExhibitorProjects);
 
+/**
+ * @route  POST   /api/exhibitors/me/team
+ * @desc   Add a team member (optional photo upload)
+ * @access Exhibitor
+ */
+router.post('/me/team', requireExhibitor, upload.fields([{ name: 'photo', maxCount: 1 }]), controller.addTeamMember);
+
+/**
+ * @route  GET    /api/exhibitors/me/team
+ * @desc   Get current exhibitor's team members
+ * @access Exhibitor
+ */
+router.get('/me/team', requireExhibitor, controller.getMyTeam);
+
+/**
+ * @route  DELETE /api/exhibitors/me/team/:memberId
+ * @desc   Remove a team member
+ * @access Exhibitor
+ */
+router.delete('/me/team/:memberId', requireExhibitor, controller.removeTeamMember);
+
+/**
+ * @route  GET    /api/exhibitors/:id/team
+ * @desc   Get any exhibitor's team members
+ * @access Admin
+ */
+router.get('/:id/team', requireAdmin, controller.getExhibitorTeam);
+
 module.exports = router;
