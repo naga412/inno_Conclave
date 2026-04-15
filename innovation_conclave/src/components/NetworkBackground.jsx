@@ -45,7 +45,7 @@ export default function NetworkBackground() {
 
     const initParticles = () => {
       particles = [];
-      const count = Math.min(Math.floor(canvas.width / 30), 150);
+      const count = Math.min(Math.floor(canvas.width / 30), 60);
       for (let i = 0; i < count; i++) particles.push(new Particle());
     };
 
