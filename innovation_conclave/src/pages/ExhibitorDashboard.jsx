@@ -544,7 +544,7 @@ export default function ExhibitorDashboard() {
                 <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Description</label>
                 <textarea required value={projectForm.description} onChange={e => setProjectForm({ ...projectForm, description: e.target.value })} className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-orange-600 focus:outline-none min-h-[100px] resize-none dark:text-white" placeholder="Describe your project..."></textarea>
               </div>
-              <div>
+              {/* <div>
                 <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Images (Max 5)</label>
                 <label className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-slate-200 dark:border-white/10 rounded-sm hover:border-orange-600 hover:bg-orange-50 dark:hover:bg-orange-900/10 transition-colors cursor-pointer group">
                   <input type="file" required={projectForm.files.length === 0} multiple accept="image/*" className="hidden" onChange={e => {
@@ -558,7 +558,7 @@ export default function ExhibitorDashboard() {
                   <p className="text-sm font-bold text-slate-700 dark:text-slate-300">Click to upload images</p>
                   <p className="text-xs text-slate-500 mt-1">{projectForm.files.length} selected</p>
                 </label>
-              </div>
+              </div> */}
               <div className="pt-2">
                 <button type="submit" disabled={submittingProject} className="w-full flex items-center justify-center gap-2 py-4 rounded-sm bg-orange-600 hover:bg-orange-600 text-white font-bold shadow-lg shadow-orange-300/20 transition-all disabled:opacity-70 group">
                   {submittingProject ? <Loader2 className="w-5 h-5 animate-spin" /> : "Save Project"}
